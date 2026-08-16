@@ -1,0 +1,184 @@
+[
+  {
+    "id": 1,
+    "question": "Sự hình thành dân tộc ở phương Đông (trong đó có Việt Nam) rất sớm, trước cả khi chủ nghĩa tư bản ra đời. Yếu tố thực tiễn cốt lõi nào đã 'ép buộc' các bộ tộc phương Đông phải liên kết chặt chẽ với nhau từ sớm như vậy?",
+    "answers": [
+      "Nhu cầu giao thương hàng hóa quốc tế.",
+      "Yêu cầu trị thủy và chống ngoại xâm.",
+      "Sự ra đời của chữ viết thống nhất.",
+      "Sự xuất hiện của các tôn giáo lớn."
+    ],
+    "correct": 1,
+    "difficulty": "easy",
+    "explanation": "Ở phương Đông, nhu cầu trị thủy (đắp đê, làm thủy lợi cho nông nghiệp lúa nước) và yêu cầu chống ngoại xâm buộc các bộ tộc phải cố kết cộng đồng từ rất sớm, trước khi chủ nghĩa tư bản xuất hiện."
+  },
+  {
+    "id": 2,
+    "question": "Trong bối cảnh toàn cầu hóa hiện nay, xu hướng các quốc gia xích lại gần nhau, xóa bỏ rào cản thương mại và lập ra các liên minh khu vực phản ánh xu hướng khách quan nào?",
+    "answers": [
+      "Xu hướng muốn tách ra lập quốc gia độc lập.",
+      "Xu hướng đồng hóa cưỡng bức.",
+      "Xu hướng liên hiệp các dân tộc.",
+      "Xu hướng hòa tan bản sắc."
+    ],
+    "correct": 2,
+    "difficulty": "easy",
+    "explanation": "Đây là xu hướng liên hiệp giữa các dân tộc - một trong hai xu hướng khách quan của phong trào dân tộc theo chủ nghĩa Mác - Lênin, thể hiện qua các liên minh khu vực và toàn cầu hóa."
+  },
+  {
+    "id": 3,
+    "question": "Một người theo đạo Thiên Chúa ở Việt Nam vừa đi lễ nhà thờ vừa tham gia Giỗ Tổ Hùng Vương chứng minh điều gì?",
+    "answers": [
+      "Mâu thuẫn giữa đạo và đời.",
+      "Sự chi phối của tín ngưỡng truyền thống.",
+      "Giáo lý lỏng lẻo.",
+      "Sự đồng hóa tôn giáo."
+    ],
+    "correct": 1,
+    "difficulty": "medium",
+    "explanation": "Việc kết hợp hài hòa giữa tôn giáo ngoại nhập và tín ngưỡng thờ cúng tổ tiên cho thấy tín ngưỡng truyền thống dân tộc vẫn có sức chi phối mạnh mẽ trong đời sống tâm linh người Việt."
+  },
+  {
+    "id": 4,
+    "question": "Đặc điểm cư trú xen kẽ của 54 dân tộc dẫn đến hệ quả nào?",
+    "answers": [
+      "Dễ chia vùng tự trị.",
+      "Không thể tách riêng lãnh thổ từng dân tộc.",
+      "Tự động đồng hóa.",
+      "Luôn xảy ra tranh chấp."
+    ],
+    "correct": 1,
+    "difficulty": "medium",
+    "explanation": "Do các dân tộc cư trú phân tán và xen kẽ nhau, không dân tộc nào có lãnh thổ riêng biệt, nên không thể phân chia lãnh thổ theo từng dân tộc - đây là cơ sở của khối đại đoàn kết toàn dân tộc."
+  },
+  {
+    "id": 5,
+    "question": "Theo chủ nghĩa Mác - Lênin, nhận định đúng về sự tồn tại của tôn giáo là gì?",
+    "answers": [
+      "Sẽ biến mất ngay.",
+      "Là hiện tượng lịch sử có bắt đầu và kết thúc.",
+      "Tồn tại vĩnh hằng.",
+      "Không có giá trị thực tiễn."
+    ],
+    "correct": 1,
+    "difficulty": "medium",
+    "explanation": "Chủ nghĩa Mác - Lênin coi tôn giáo là một phạm trù lịch sử: nó ra đời trong những điều kiện lịch sử nhất định và sẽ mất đi khi những điều kiện sinh ra nó không còn."
+  },
+  {
+    "id": 6,
+    "question": "Vì sao tôn giáo vẫn tồn tại trong thời kỳ quá độ lên CNXH?",
+    "answers": [
+      "Khoa học chưa giải thích và giải quyết hết mọi vấn đề.",
+      "Bị ép buộc.",
+      "Bản chất sinh học.",
+      "Do nhà nước duy trì."
+    ],
+    "correct": 0,
+    "difficulty": "hard",
+    "explanation": "Nguyên nhân nhận thức: trình độ khoa học và dân trí chưa thể giải thích, giải quyết hết mọi hiện tượng tự nhiên - xã hội, nên tôn giáo vẫn còn cơ sở tồn tại trong thời kỳ quá độ."
+  },
+  {
+    "id": 7,
+    "question": "Nhà nước cần áp dụng nguyên tắc nào khi xử lý nhóm lợi dụng tôn giáo?",
+    "answers": [
+      "Cấm toàn bộ.",
+      "Coi tất cả tín đồ là tội phạm.",
+      "Phân biệt mặt chính trị và mặt tư tưởng.",
+      "Thỏa hiệp."
+    ],
+    "correct": 2,
+    "difficulty": "hard",
+    "explanation": "Cần phân biệt rõ hai mặt chính trị và tư tưởng trong tôn giáo: tôn trọng nhu cầu tín ngưỡng chính đáng, đồng thời kiên quyết đấu tranh với âm mưu lợi dụng tôn giáo chống phá."
+  },
+  {
+    "id": 8,
+    "question": "Điểm giúp Việt Nam tránh xung đột tôn giáo như Trung Đông là gì?",
+    "answers": [
+      "Không ai theo tôn giáo.",
+      "Các tôn giáo chung sống hòa bình.",
+      "Kiểm soát cực nghiêm.",
+      "Một giáo chủ."
+    ],
+    "correct": 1,
+    "difficulty": "medium",
+    "explanation": "Truyền thống khoan dung, các tôn giáo ở Việt Nam chung sống hòa bình, đoàn kết trong khối đại đoàn kết dân tộc là nền tảng giúp tránh được xung đột tôn giáo."
+  },
+  {
+    "id": 9,
+    "question": "Cốt lõi của công tác tôn giáo hiện nay là gì?",
+    "answers": [
+      "Quản lý tài chính.",
+      "Tổ chức lễ hội.",
+      "Công tác vận động quần chúng.",
+      "Hạn chế xây cơ sở."
+    ],
+    "correct": 2,
+    "difficulty": "hard",
+    "explanation": "Nội dung cốt lõi của công tác tôn giáo là công tác vận động quần chúng tín đồ, chức sắc tham gia xây dựng và bảo vệ Tổ quốc, sống 'tốt đời đẹp đạo'."
+  },
+  {
+    "id": 10,
+    "question": "Tính nguy hiểm nhất của Tin Lành Đề Ga hay Hà Mòn là gì?",
+    "answers": [
+      "Nghi lễ.",
+      "Không dùng tiếng Việt.",
+      "Bị lợi dụng kích động ly khai dân tộc.",
+      "Giáo lý khác."
+    ],
+    "correct": 2,
+    "difficulty": "hard",
+    "explanation": "Tính nguy hiểm nhất là chúng bị các thế lực thù địch lợi dụng để kích động tư tưởng ly khai, tự trị, chia rẽ khối đại đoàn kết dân tộc và chống phá Nhà nước."
+  },
+  {
+    "id": 11,
+    "question": "Theo Lênin, điều kiện tiên quyết để giải quyết vấn đề dân tộc dưới CNXH là gì?",
+    "answers": [
+      "Xây dựng đội quân riêng cho từng dân tộc.",
+      "Thực hiện quyền tự trị văn hóa - dân tộc.",
+      "Thực hiện triệt để quyền bình đẳng dân tộc.",
+      "Cho phép tự do ly khai khỏi liên bang."
+    ],
+    "correct": 2,
+    "difficulty": "very_hard",
+    "explanation": "Lênin nhấn mạnh: quyền bình đẳng hoàn toàn giữa các dân tộc là tiền đề không thể thiếu; nếu không có bình đẳng thực sự thì đoàn kết tự nguyện là không thể."
+  },
+  {
+    "id": 12,
+    "question": "Trong lý luận Mác - Lênin, 'dân tộc - tộc người' (ethnic group) và 'dân tộc - quốc gia' (nation) khác nhau ở tiêu chí cơ bản nào?",
+    "answers": [
+      "Dân tộc - quốc gia không cần ngôn ngữ chung.",
+      "Dân tộc - tộc người gắn với lãnh thổ quốc gia còn dân tộc - quốc gia thì không.",
+      "Dân tộc - quốc gia có lãnh thổ, nhà nước, kinh tế thị trường còn dân tộc - tộc người chỉ là cộng đồng tộc loại.",
+      "Hai khái niệm hoàn toàn đồng nhất, không có sự khác biệt."
+    ],
+    "correct": 2,
+    "difficulty": "very_hard",
+    "explanation": "Dân tộc - quốc gia (nation) được hình thành với 4 đặc trưng: cộng đồng ổn định về lãnh thổ, kinh tế, ngôn ngữ và tâm lý (văn hóa). Còn dân tộc - tộc người (ethnic) chỉ là cộng đồng mang bản sắc riêng, chưa đạt đến tầm quốc gia."
+  },
+  {
+    "id": 13,
+    "question": "Nguyên tắc 'các dân tộc có quyền tự quyết' trong Cương lĩnh dân tộc của Lênin bao gồm quyền nào sau đây?",
+    "answers": [
+      "Quyền tự do tôn giáo và ngôn ngữ mà không cần có nhà nước.",
+      "Quyền phân lập thành quốc gia độc lập hoặc tự nguyện liên hiệp với dân tộc khác.",
+      "Quyền phủ quyết mọi quyết định của Quốc hội liên bang.",
+      "Quyền có quân đội riêng và ký kết hiệp ước quốc tế độc lập."
+    ],
+    "correct": 1,
+    "difficulty": "very_hard",
+    "explanation": "Quyền tự quyết dân tộc trong cương lĩnh Lênin chứa đựng quyền tách ra thành quốc gia độc lập lẫn quyền tự nguyện liên hiệp - nhưng giai cấp vô sản cần căn cứ lợi ích cách mạng để quyết định ủng hộ hay không."
+  },
+  {
+    "id": 14,
+    "question": "Vì sao Hồ Chí Minh khẳng định 'tín ngưỡng tự do, lương giáo đoàn kết' là nguyên tắc xử lý tôn giáo ở Việt Nam?",
+    "answers": [
+      "Vì tôn giáo hoàn toàn không ảnh hưởng đến chính trị.",
+      "Vì nhà nước không có thẩm quyền quản lý tôn giáo.",
+      "Vì đảm bảo quyền tự do tín ngưỡng đồng thời phát huy tinh thần yêu nước của tín đồ.",
+      "Vì chủ nghĩa vô thần đã bị xóa bỏ trong CNXH."
+    ],
+    "correct": 2,
+    "difficulty": "very_hard",
+    "explanation": "Hồ Chí Minh tôn trọng nhu cầu tâm linh chính đáng của nhân dân (lương giáo đoàn kết) đồng thời khẳng định mọi người dù tôn giáo nào cũng đều yêu nước, từ đó tập hợp lực lượng kháng chiến và xây dựng đất nước."
+  }
+]

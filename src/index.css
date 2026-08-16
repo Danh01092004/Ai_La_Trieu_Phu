@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #050817;
+  color: #f5f7ff;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#root {
+  position: relative;
+  isolation: isolate;
+}
+
+::selection {
+  background: rgba(245, 197, 66, 0.4);
+  color: #fff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #5b74f0, #7c3aed);
+  border-radius: 8px;
+}
+
+@layer components {
+  .glass {
+    background: linear-gradient(
+      135deg,
+      rgba(24, 33, 85, 0.55),
+      rgba(10, 15, 44, 0.65)
+    );
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-gold {
+    background: linear-gradient(
+      135deg,
+      rgba(245, 197, 66, 0.14),
+      rgba(184, 134, 11, 0.08)
+    );
+    border: 1px solid rgba(245, 197, 66, 0.35);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .text-glow-gold {
+    text-shadow: 0 0 18px rgba(245, 197, 66, 0.75),
+      0 0 40px rgba(245, 197, 66, 0.35);
+  }
+
+  .text-glow-blue {
+    text-shadow: 0 0 18px rgba(91, 116, 240, 0.8),
+      0 0 44px rgba(124, 58, 237, 0.4);
+  }
+}
+
+@layer utilities {
+  .hexClip {
+    clip-path: polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%);
+  }
+
+  .drag-none {
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+}
+
+/* Animated conic border used on premium panels */
+.animated-border {
+  position: relative;
+}
+.animated-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--angle, 0deg),
+    transparent 0%,
+    rgba(245, 197, 66, 0.9) 20%,
+    transparent 40%,
+    rgba(91, 116, 240, 0.9) 60%,
+    transparent 80%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: borderSpin 6s linear infinite;
+  pointer-events: none;
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes borderSpin {
+  to {
+    --angle: 360deg;
+  }
+}
+
+@keyframes flashRed {
+  0%,
+  100% {
+    background-color: rgba(220, 38, 38, 0.15);
+    box-shadow: 0 0 0 rgba(239, 68, 68, 0);
+  }
+  50% {
+    background-color: rgba(220, 38, 38, 0.6);
+    box-shadow: 0 0 28px rgba(239, 68, 68, 0.8);
+  }
+}
+
+@keyframes flashGold {
+  0%,
+  100% {
+    background-color: rgba(245, 197, 66, 0.2);
+    box-shadow: 0 0 0 rgba(245, 197, 66, 0);
+  }
+  50% {
+    background-color: rgba(245, 197, 66, 0.6);
+    box-shadow: 0 0 28px rgba(245, 197, 66, 0.85);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(28);
+    opacity: 0;
+  }
+}
+
+/* Moving stage spotlights */
+.spotlight {
+  position: absolute;
+  top: -20%;
+  width: 55vmax;
+  height: 130vmax;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  filter: blur(10px);
+  opacity: 0.35;
+  transform-origin: top center;
+}
+.spotlight--left {
+  left: 8%;
+  background: conic-gradient(
+    from 165deg at 50% 0%,
+    transparent 0deg,
+    rgba(91, 116, 240, 0.35) 8deg,
+    transparent 16deg
+  );
+  animation: sweepLeft 9s ease-in-out infinite;
+}
+.spotlight--right {
+  right: 8%;
+  background: conic-gradient(
+    from 195deg at 50% 0%,
+    transparent 0deg,
+    rgba(245, 197, 66, 0.3) 8deg,
+    transparent 16deg
+  );
+  animation: sweepRight 11s ease-in-out infinite;
+}
+@keyframes sweepLeft {
+  0%,
+  100% {
+    transform: rotate(-18deg);
+  }
+  50% {
+    transform: rotate(14deg);
+  }
+}
+@keyframes sweepRight {
+  0%,
+  100% {
+    transform: rotate(16deg);
+  }
+  50% {
+    transform: rotate(-16deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight,
+  .animated-border::before {
+    animation: none !important;
+  }
+}
+
+/* Lifeline button glow pulse — CSS animation avoids Framer Motion RAF cost */
+@keyframes lifelinePulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(245,197,66,0.3); }
+  50%       { box-shadow: 0 0 26px rgba(245,197,66,0.6); }
+}
+.lifeline-pulse {
+  animation: lifelinePulse 2.4s ease-in-out infinite;
+}

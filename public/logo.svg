@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 260" width="600" height="260">
+  <defs>
+    <linearGradient id="goldFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff3c4"/>
+      <stop offset="35%" stop-color="#ffd966"/>
+      <stop offset="60%" stop-color="#f5c542"/>
+      <stop offset="100%" stop-color="#b8860b"/>
+    </linearGradient>
+    <linearGradient id="blueFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8ea8ff"/>
+      <stop offset="100%" stop-color="#3a52d6"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="rgba(124,58,237,0.55)"/>
+      <stop offset="100%" stop-color="rgba(124,58,237,0)"/>
+    </radialGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="300" cy="120" rx="290" ry="120" fill="url(#halo)"/>
+  <circle cx="300" cy="120" r="112" fill="none" stroke="url(#blueFill)" stroke-width="2" stroke-dasharray="6 10" opacity="0.5" filter="url(#glow)"/>
+  <text x="300" y="96" text-anchor="middle" font-family="Oswald, Bebas Neue, sans-serif" font-weight="700" font-size="58" fill="url(#blueFill)" filter="url(#glow)" letter-spacing="4">AI LÀ</text>
+  <text x="300" y="182" text-anchor="middle" font-family="Oswald, Bebas Neue, sans-serif" font-weight="700" font-size="92" fill="url(#goldFill)" stroke="#6b4e04" stroke-width="1.5" filter="url(#glow)" letter-spacing="2">TRIỆU PHÚ</text>
+</svg>
