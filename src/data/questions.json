@@ -1,184 +1,197 @@
 [
   {
     "id": 1,
-    "question": "Sự hình thành dân tộc ở phương Đông (trong đó có Việt Nam) rất sớm, trước cả khi chủ nghĩa tư bản ra đời. Yếu tố thực tiễn cốt lõi nào đã 'ép buộc' các bộ tộc phương Đông phải liên kết chặt chẽ với nhau từ sớm như vậy?",
+    "question": "Chương 5 trình bày tư tưởng Hồ Chí Minh về những vấn đề gì?",
     "answers": [
-      "Nhu cầu giao thương hàng hóa quốc tế.",
-      "Yêu cầu trị thủy và chống ngoại xâm.",
-      "Sự ra đời của chữ viết thống nhất.",
-      "Sự xuất hiện của các tôn giáo lớn."
+      "Đại đoàn kết toàn dân tộc và đoàn kết quốc tế",
+      "Xây dựng Đảng và Nhà nước",
+      "Đạo đức cách mạng",
+      "Chủ nghĩa xã hội và con đường đi lên chủ nghĩa xã hội"
     ],
-    "correct": 1,
+    "correct": 0,
     "difficulty": "easy",
-    "explanation": "Ở phương Đông, nhu cầu trị thủy (đắp đê, làm thủy lợi cho nông nghiệp lúa nước) và yêu cầu chống ngoại xâm buộc các bộ tộc phải cố kết cộng đồng từ rất sớm, trước khi chủ nghĩa tư bản xuất hiện."
+    "explanation": "Chương 5 tập trung trình bày tư tưởng Hồ Chí Minh về đại đoàn kết toàn dân tộc và đoàn kết quốc tế, hai nội dung quan trọng trong tư tưởng của Người về tập hợp và phát huy sức mạnh cách mạng."
   },
   {
     "id": 2,
-    "question": "Trong bối cảnh toàn cầu hóa hiện nay, xu hướng các quốc gia xích lại gần nhau, xóa bỏ rào cản thương mại và lập ra các liên minh khu vực phản ánh xu hướng khách quan nào?",
+    "question": "Theo Hồ Chí Minh, đại đoàn kết toàn dân tộc có ý nghĩa như thế nào đối với cách mạng?",
     "answers": [
-      "Xu hướng muốn tách ra lập quốc gia độc lập.",
-      "Xu hướng đồng hóa cưỡng bức.",
-      "Xu hướng liên hiệp các dân tộc.",
-      "Xu hướng hòa tan bản sắc."
+      "Chỉ là một biện pháp tạm thời trong giai đoạn kháng chiến",
+      "Có ý nghĩa chiến lược, quyết định thành công của cách mạng",
+      "Là vấn đề thứ yếu so với xây dựng lực lượng vũ trang",
+      "Chỉ áp dụng trong nội bộ Đảng"
     ],
-    "correct": 2,
+    "correct": 1,
     "difficulty": "easy",
-    "explanation": "Đây là xu hướng liên hiệp giữa các dân tộc - một trong hai xu hướng khách quan của phong trào dân tộc theo chủ nghĩa Mác - Lênin, thể hiện qua các liên minh khu vực và toàn cầu hóa."
+    "explanation": "Hồ Chí Minh coi đại đoàn kết toàn dân tộc là vấn đề có ý nghĩa chiến lược, cơ bản, nhất quán và xuyên suốt tiến trình cách mạng, quyết định thành công của cách mạng."
   },
   {
     "id": 3,
-    "question": "Một người theo đạo Thiên Chúa ở Việt Nam vừa đi lễ nhà thờ vừa tham gia Giỗ Tổ Hùng Vương chứng minh điều gì?",
+    "question": "Hồ Chí Minh dùng khái niệm nào để chỉ 'mọi con dân nước Việt', không phân biệt dân tộc, tôn giáo, già trẻ, giàu nghèo?",
     "answers": [
-      "Mâu thuẫn giữa đạo và đời.",
-      "Sự chi phối của tín ngưỡng truyền thống.",
-      "Giáo lý lỏng lẻo.",
-      "Sự đồng hóa tôn giáo."
+      "\"Quần chúng cách mạng\"",
+      "\"Đồng bào chiến sĩ\"",
+      "\"Dân\" và \"Nhân dân\"",
+      "\"Công dân yêu nước\""
     ],
-    "correct": 1,
-    "difficulty": "medium",
-    "explanation": "Việc kết hợp hài hòa giữa tôn giáo ngoại nhập và tín ngưỡng thờ cúng tổ tiên cho thấy tín ngưỡng truyền thống dân tộc vẫn có sức chi phối mạnh mẽ trong đời sống tâm linh người Việt."
+    "correct": 2,
+    "difficulty": "easy",
+    "explanation": "Hồ Chí Minh sử dụng các khái niệm 'dân' và 'nhân dân' với nội hàm rộng, bao gồm mọi con dân nước Việt không phân biệt dân tộc, tôn giáo, giàu nghèo, già trẻ."
   },
   {
     "id": 4,
-    "question": "Đặc điểm cư trú xen kẽ của 54 dân tộc dẫn đến hệ quả nào?",
+    "question": "Lực lượng nòng cốt của khối đại đoàn kết toàn dân tộc là những ai?",
     "answers": [
-      "Dễ chia vùng tự trị.",
-      "Không thể tách riêng lãnh thổ từng dân tộc.",
-      "Tự động đồng hóa.",
-      "Luôn xảy ra tranh chấp."
+      "Trí thức và văn nghệ sĩ",
+      "Công nhân, nông dân (liên minh công - nông - trí thức)",
+      "Thương nhân và doanh nhân",
+      "Quân đội và công an"
     ],
     "correct": 1,
-    "difficulty": "medium",
-    "explanation": "Do các dân tộc cư trú phân tán và xen kẽ nhau, không dân tộc nào có lãnh thổ riêng biệt, nên không thể phân chia lãnh thổ theo từng dân tộc - đây là cơ sở của khối đại đoàn kết toàn dân tộc."
+    "difficulty": "easy",
+    "explanation": "Theo tư tưởng Hồ Chí Minh, nền tảng của khối đại đoàn kết toàn dân tộc là liên minh công nhân - nông dân - trí thức, trong đó liên minh công - nông là nền tảng."
   },
   {
     "id": 5,
-    "question": "Theo chủ nghĩa Mác - Lênin, nhận định đúng về sự tồn tại của tôn giáo là gì?",
+    "question": "Hình thức tổ chức của khối đại đoàn kết toàn dân tộc được gọi là gì?",
     "answers": [
-      "Sẽ biến mất ngay.",
-      "Là hiện tượng lịch sử có bắt đầu và kết thúc.",
-      "Tồn tại vĩnh hằng.",
-      "Không có giá trị thực tiễn."
+      "Hội đồng nhân dân các cấp",
+      "Ủy ban Trung ương Đảng",
+      "Mặt trận dân tộc thống nhất",
+      "Quốc hội"
     ],
-    "correct": 1,
-    "difficulty": "medium",
-    "explanation": "Chủ nghĩa Mác - Lênin coi tôn giáo là một phạm trù lịch sử: nó ra đời trong những điều kiện lịch sử nhất định và sẽ mất đi khi những điều kiện sinh ra nó không còn."
+    "correct": 2,
+    "difficulty": "easy",
+    "explanation": "Mặt trận dân tộc thống nhất là hình thức tổ chức của khối đại đoàn kết toàn dân tộc, nơi tập hợp các giai cấp, tầng lớp, dân tộc, tôn giáo và lực lượng yêu nước."
   },
   {
     "id": 6,
-    "question": "Vì sao tôn giáo vẫn tồn tại trong thời kỳ quá độ lên CNXH?",
+    "question": "Mặt trận dân tộc thống nhất phải hoạt động theo nguyên tắc nào?",
     "answers": [
-      "Khoa học chưa giải thích và giải quyết hết mọi vấn đề.",
-      "Bị ép buộc.",
-      "Bản chất sinh học.",
-      "Do nhà nước duy trì."
+      "Nguyên tắc tập trung dân chủ",
+      "Nguyên tắc hiệp thương dân chủ",
+      "Nguyên tắc đa số quyết định",
+      "Nguyên tắc lãnh đạo tập thể, cá nhân phụ trách"
     ],
-    "correct": 0,
-    "difficulty": "hard",
-    "explanation": "Nguyên nhân nhận thức: trình độ khoa học và dân trí chưa thể giải thích, giải quyết hết mọi hiện tượng tự nhiên - xã hội, nên tôn giáo vẫn còn cơ sở tồn tại trong thời kỳ quá độ."
+    "correct": 1,
+    "difficulty": "easy",
+    "explanation": "Mặt trận dân tộc thống nhất hoạt động theo nguyên tắc hiệp thương dân chủ, nhằm phát huy sự thống nhất trong đa dạng và tôn trọng lợi ích chính đáng của các thành viên."
   },
   {
     "id": 7,
-    "question": "Nhà nước cần áp dụng nguyên tắc nào khi xử lý nhóm lợi dụng tôn giáo?",
+    "question": "Theo Hồ Chí Minh, cách mạng Việt Nam là một bộ phận của cái gì?",
     "answers": [
-      "Cấm toàn bộ.",
-      "Coi tất cả tín đồ là tội phạm.",
-      "Phân biệt mặt chính trị và mặt tư tưởng.",
-      "Thỏa hiệp."
+      "Phong trào không liên kết",
+      "Cách mạng thế giới",
+      "Hệ thống các nước xã hội chủ nghĩa",
+      "Phong trào giải phóng dân tộc châu Á"
     ],
-    "correct": 2,
-    "difficulty": "hard",
-    "explanation": "Cần phân biệt rõ hai mặt chính trị và tư tưởng trong tôn giáo: tôn trọng nhu cầu tín ngưỡng chính đáng, đồng thời kiên quyết đấu tranh với âm mưu lợi dụng tôn giáo chống phá."
+    "correct": 1,
+    "difficulty": "easy",
+    "explanation": "Hồ Chí Minh khẳng định cách mạng Việt Nam là một bộ phận của cách mạng thế giới, vì vậy cách mạng Việt Nam cần gắn sức mạnh dân tộc với sức mạnh của các lực lượng tiến bộ trên thế giới."
   },
   {
     "id": 8,
-    "question": "Điểm giúp Việt Nam tránh xung đột tôn giáo như Trung Đông là gì?",
+    "question": "Sức mạnh tổng hợp của cách mạng Việt Nam được kết hợp từ hai loại sức mạnh nào?",
     "answers": [
-      "Không ai theo tôn giáo.",
-      "Các tôn giáo chung sống hòa bình.",
-      "Kiểm soát cực nghiêm.",
-      "Một giáo chủ."
+      "Sức mạnh kinh tế và sức mạnh quân sự",
+      "Sức mạnh dân tộc và sức mạnh thời đại",
+      "Sức mạnh chính trị và sức mạnh văn hóa",
+      "Sức mạnh nhân dân và sức mạnh Nhà nước"
     ],
     "correct": 1,
-    "difficulty": "medium",
-    "explanation": "Truyền thống khoan dung, các tôn giáo ở Việt Nam chung sống hòa bình, đoàn kết trong khối đại đoàn kết dân tộc là nền tảng giúp tránh được xung đột tôn giáo."
+    "difficulty": "easy",
+    "explanation": "Hồ Chí Minh chủ trương kết hợp sức mạnh dân tộc với sức mạnh thời đại, phát huy nội lực của dân tộc đồng thời tranh thủ sự đồng tình, ủng hộ và các nguồn lực từ bên ngoài."
   },
   {
     "id": 9,
-    "question": "Cốt lõi của công tác tôn giáo hiện nay là gì?",
+    "question": "Để hiện thực hóa đoàn kết quốc tế, Hồ Chí Minh đã hình thành bao nhiêu mặt trận đoàn kết?",
     "answers": [
-      "Quản lý tài chính.",
-      "Tổ chức lễ hội.",
-      "Công tác vận động quần chúng.",
-      "Hạn chế xây cơ sở."
+      "2 mặt trận",
+      "3 mặt trận",
+      "4 mặt trận",
+      "5 mặt trận"
     ],
     "correct": 2,
-    "difficulty": "hard",
-    "explanation": "Nội dung cốt lõi của công tác tôn giáo là công tác vận động quần chúng tín đồ, chức sắc tham gia xây dựng và bảo vệ Tổ quốc, sống 'tốt đời đẹp đạo'."
+    "difficulty": "easy",
+    "explanation": "Tư tưởng Hồ Chí Minh về đoàn kết quốc tế được thể hiện thông qua bốn mặt trận đoàn kết quốc tế, nhằm tập hợp và phát huy sức mạnh của các lực lượng tiến bộ trên thế giới."
   },
   {
     "id": 10,
-    "question": "Tính nguy hiểm nhất của Tin Lành Đề Ga hay Hà Mòn là gì?",
+    "question": "Khẩu hiệu thể hiện tinh thần độc lập, tự chủ mà Hồ Chí Minh luôn nêu cao là gì?",
     "answers": [
-      "Nghi lễ.",
-      "Không dùng tiếng Việt.",
-      "Bị lợi dụng kích động ly khai dân tộc.",
-      "Giáo lý khác."
+      "\"Không có gì quý hơn độc lập, tự do\"",
+      "\"Vì nhân dân quên mình\"",
+      "\"Tự lực cánh sinh, dựa vào sức mình là chính\"",
+      "\"Đoàn kết, đoàn kết, đại đoàn kết\""
     ],
     "correct": 2,
-    "difficulty": "hard",
-    "explanation": "Tính nguy hiểm nhất là chúng bị các thế lực thù địch lợi dụng để kích động tư tưởng ly khai, tự trị, chia rẽ khối đại đoàn kết dân tộc và chống phá Nhà nước."
+    "difficulty": "easy",
+    "explanation": "Khẩu hiệu 'Tự lực cánh sinh, dựa vào sức mình là chính' thể hiện rõ tư tưởng độc lập, tự chủ của Hồ Chí Minh, đồng thời không phủ nhận việc tranh thủ sự giúp đỡ quốc tế."
   },
   {
     "id": 11,
-    "question": "Theo Lênin, điều kiện tiên quyết để giải quyết vấn đề dân tộc dưới CNXH là gì?",
+    "question": "Vì sao Hồ Chí Minh khẳng định đại đoàn kết toàn dân tộc là vấn đề có ý nghĩa chiến lược, quyết định thành công của cách mạng?",
     "answers": [
-      "Xây dựng đội quân riêng cho từng dân tộc.",
-      "Thực hiện quyền tự trị văn hóa - dân tộc.",
-      "Thực hiện triệt để quyền bình đẳng dân tộc.",
-      "Cho phép tự do ly khai khỏi liên bang."
+      "Vì đoàn kết giúp tiết kiệm nguồn lực kinh tế cho Nhà nước",
+      "Vì đây là vấn đề cơ bản, nhất quán, xuyên suốt tiến trình cách mạng; chính sách đoàn kết phù hợp quyết định thành bại của cách mạng trong từng giai đoạn",
+      "Vì đoàn kết là yêu cầu bắt buộc của các nước xã hội chủ nghĩa anh em",
+      "Vì đoàn kết giúp giảm bớt vai trò lãnh đạo của Đảng"
     ],
-    "correct": 2,
-    "difficulty": "very_hard",
-    "explanation": "Lênin nhấn mạnh: quyền bình đẳng hoàn toàn giữa các dân tộc là tiền đề không thể thiếu; nếu không có bình đẳng thực sự thì đoàn kết tự nguyện là không thể."
+    "correct": 1,
+    "difficulty": "hard",
+    "explanation": "Đại đoàn kết toàn dân tộc là vấn đề cơ bản, nhất quán và xuyên suốt tiến trình cách mạng. Trong mỗi giai đoạn, nếu xây dựng được chính sách đoàn kết phù hợp thì sẽ tập hợp và phát huy được sức mạnh của toàn dân, từ đó quyết định thành công của cách mạng."
   },
   {
     "id": 12,
-    "question": "Trong lý luận Mác - Lênin, 'dân tộc - tộc người' (ethnic group) và 'dân tộc - quốc gia' (nation) khác nhau ở tiêu chí cơ bản nào?",
+    "question": "Đâu KHÔNG phải là một trong 4 điều kiện xây dựng khối đại đoàn kết toàn dân tộc theo tư tưởng Hồ Chí Minh?",
     "answers": [
-      "Dân tộc - quốc gia không cần ngôn ngữ chung.",
-      "Dân tộc - tộc người gắn với lãnh thổ quốc gia còn dân tộc - quốc gia thì không.",
-      "Dân tộc - quốc gia có lãnh thổ, nhà nước, kinh tế thị trường còn dân tộc - tộc người chỉ là cộng đồng tộc loại.",
-      "Hai khái niệm hoàn toàn đồng nhất, không có sự khác biệt."
+      "Lấy lợi ích chung làm điểm quy tụ, tôn trọng lợi ích khác biệt chính đáng",
+      "Kế thừa truyền thống yêu nước - nhân nghĩa - đoàn kết của dân tộc",
+      "Xây dựng lực lượng vũ trang nhân dân hùng mạnh làm nòng cốt",
+      "Có lòng khoan dung, độ lượng với con người và có niềm tin vào nhân dân"
     ],
     "correct": 2,
-    "difficulty": "very_hard",
-    "explanation": "Dân tộc - quốc gia (nation) được hình thành với 4 đặc trưng: cộng đồng ổn định về lãnh thổ, kinh tế, ngôn ngữ và tâm lý (văn hóa). Còn dân tộc - tộc người (ethnic) chỉ là cộng đồng mang bản sắc riêng, chưa đạt đến tầm quốc gia."
+    "difficulty": "hard",
+    "explanation": "Xây dựng lực lượng vũ trang nhân dân hùng mạnh không phải là một trong bốn điều kiện trực tiếp để xây dựng khối đại đoàn kết toàn dân tộc. Các điều kiện nhấn mạnh truyền thống đoàn kết, lợi ích chung, lòng khoan dung và niềm tin vào nhân dân."
   },
   {
     "id": 13,
-    "question": "Nguyên tắc 'các dân tộc có quyền tự quyết' trong Cương lĩnh dân tộc của Lênin bao gồm quyền nào sau đây?",
+    "question": "Mặt trận đoàn kết Việt - Miên - Lào trong 4 mặt trận đoàn kết quốc tế của Hồ Chí Minh nhằm mục đích gì?",
     "answers": [
-      "Quyền tự do tôn giáo và ngôn ngữ mà không cần có nhà nước.",
-      "Quyền phân lập thành quốc gia độc lập hoặc tự nguyện liên hiệp với dân tộc khác.",
-      "Quyền phủ quyết mọi quyết định của Quốc hội liên bang.",
-      "Quyền có quân đội riêng và ký kết hiệp ước quốc tế độc lập."
+      "Mở rộng, củng cố quan hệ đoàn kết hữu nghị với các nước châu Phi",
+      "Tranh thủ sự đồng tình của các nước xã hội chủ nghĩa chống đế quốc xâm lược",
+      "Phối hợp và giúp đỡ lẫn nhau cùng chiến đấu thắng lợi, dựa trên quan hệ láng giềng gần gũi, tương đồng lịch sử - văn hóa và chung kẻ thù",
+      "Khơi dậy sức mạnh và quyền tự quyết của mỗi dân tộc trong nội bộ Việt Nam"
     ],
-    "correct": 1,
-    "difficulty": "very_hard",
-    "explanation": "Quyền tự quyết dân tộc trong cương lĩnh Lênin chứa đựng quyền tách ra thành quốc gia độc lập lẫn quyền tự nguyện liên hiệp - nhưng giai cấp vô sản cần căn cứ lợi ích cách mạng để quyết định ủng hộ hay không."
+    "correct": 2,
+    "difficulty": "hard",
+    "explanation": "Mặt trận đoàn kết Việt - Miên - Lào nhằm phối hợp và giúp đỡ lẫn nhau trong cuộc đấu tranh, dựa trên quan hệ láng giềng gần gũi, những tương đồng về lịch sử, văn hóa và cùng chống kẻ thù xâm lược."
   },
   {
     "id": 14,
-    "question": "Vì sao Hồ Chí Minh khẳng định 'tín ngưỡng tự do, lương giáo đoàn kết' là nguyên tắc xử lý tôn giáo ở Việt Nam?",
+    "question": "Theo Hồ Chí Minh, mối quan hệ giữa 'độc lập, tự chủ' và 'đoàn kết quốc tế' được thể hiện như thế nào?",
     "answers": [
-      "Vì tôn giáo hoàn toàn không ảnh hưởng đến chính trị.",
-      "Vì nhà nước không có thẩm quyền quản lý tôn giáo.",
-      "Vì đảm bảo quyền tự do tín ngưỡng đồng thời phát huy tinh thần yêu nước của tín đồ.",
-      "Vì chủ nghĩa vô thần đã bị xóa bỏ trong CNXH."
+      "Đoàn kết quốc tế là yếu tố quyết định, nội lực chỉ đóng vai trò hỗ trợ",
+      "Hai yếu tố độc lập với nhau, không liên quan",
+      "Nội lực là nhân tố quyết định; nguồn lực ngoại sinh (đoàn kết quốc tế) chỉ phát huy tác dụng thông qua nguồn lực nội sinh - phải có thực lực mới tranh thủ được sự ủng hộ quốc tế",
+      "Cần ưu tiên tranh thủ viện trợ quốc tế trước, sau đó mới xây dựng nội lực"
     ],
     "correct": 2,
-    "difficulty": "very_hard",
-    "explanation": "Hồ Chí Minh tôn trọng nhu cầu tâm linh chính đáng của nhân dân (lương giáo đoàn kết) đồng thời khẳng định mọi người dù tôn giáo nào cũng đều yêu nước, từ đó tập hợp lực lượng kháng chiến và xây dựng đất nước."
+    "difficulty": "hard",
+    "explanation": "Hồ Chí Minh luôn đề cao độc lập, tự chủ và sức mạnh nội lực. Đoàn kết quốc tế có vai trò quan trọng nhưng chỉ có thể phát huy hiệu quả khi dựa trên thực lực của dân tộc; vì vậy phải kết hợp nội lực với nguồn lực bên ngoài."
+  },
+  {
+    "id": 15,
+    "question": "Biểu hiện nào sau đây thể hiện đúng nhất sự vận dụng tư tưởng Hồ Chí Minh về đại đoàn kết và đoàn kết quốc tế của Đảng ta trong giai đoạn hiện nay?",
+    "answers": [
+      "Chuyển từ 'muốn là bạn' sang 'là bạn và đối tác tin cậy, thành viên có trách nhiệm', hội nhập quốc tế ngày càng sâu rộng, kết hợp xây dựng khối đại đoàn kết dân tộc trên nền tảng liên minh công - nông - trí dưới sự lãnh đạo của Đảng",
+      "Chỉ tập trung phát triển quan hệ với một số nước lớn, hạn chế hội nhập đa phương",
+      "Đặt lợi ích của các tổ chức quốc tế lên trên lợi ích dân tộc",
+      "Giảm vai trò của Mặt trận Tổ quốc Việt Nam trong đời sống chính trị - xã hội"
+    ],
+    "correct": 0,
+    "difficulty": "hard",
+    "explanation": "Việc chủ động hội nhập quốc tế, mở rộng quan hệ đối ngoại, trở thành bạn và đối tác tin cậy, thành viên có trách nhiệm của cộng đồng quốc tế, đồng thời củng cố khối đại đoàn kết toàn dân tộc thể hiện sự vận dụng tư tưởng Hồ Chí Minh trong giai đoạn hiện nay."
   }
 ]
