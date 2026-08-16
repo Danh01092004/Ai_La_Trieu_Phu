@@ -74,7 +74,6 @@ function ChickenImpl({ top, dir, duration, delay, scale, style, hop = 60, hue = 
           width={90 * scale}
           height={90 * scale}
           viewBox="0 0 100 100"
-          style={{ filter: 'drop-shadow(0 6px 10px rgba(0,0,0,0.5))' }}
         >
           {/* legs */}
           <motion.g

@@ -23,8 +23,8 @@ interface Props {
  *
  * Performance improvements vs v1:
  *  - Connective lines use a grid bucket spatial index → O(n) instead of O(n²).
- *  - shadowBlur is batched: particles are drawn in two passes (gold, blue)
- *    setting shadowColor only once per pass.
+ *  - shadowBlur removed entirely: glow is now a per-particle radial gradient
+ *    (two-stop, solid-core → transparent-halo) — no GPU compositing buffer.
  *  - DPR capped at 1.5 on high-density screens to halve fill-rate.
  *  - Line check threshold reduced from 9000 to 7500 px² (shorter connections).
  */
@@ -127,29 +127,30 @@ function ParticleFieldImpl({ density = 70, className, interactive = true }: Prop
         }
       }
 
-      // ── Draw particles in two colour batches to minimise state changes ──
-      // Pass 1: gold
-      ctx.shadowBlur  = 10
-      ctx.shadowColor = 'rgba(245,197,66,0.9)'
+      // ── Draw particles with radial gradient glow (no shadowBlur) ──────────
+      // shadowBlur forces a per-draw GPU compositing buffer allocation and is
+      // removed entirely. We approximate the soft halo with a two-stop radial
+      // gradient: solid core at the particle radius, transparent at 2.5× radius.
+      // This runs entirely on the 2D canvas rasteriser with no extra GPU pass.
       for (const p of particles) {
-        if (p.hue !== 45) continue
+        const r     = p.size
+        const halo  = r * 2.5
+        const isGold = p.hue === 45
+        const [cr, cg, cb] = isGold ? [245, 197, 66] : [91, 116, 240]
+
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, halo)
+        grad.addColorStop(0,   `rgba(${cr},${cg},${cb},${p.alpha})`)
+        grad.addColorStop(0.4, `rgba(${cr},${cg},${cb},${p.alpha * 0.55})`)
+        grad.addColorStop(1,   `rgba(${cr},${cg},${cb},0)`)
+
         ctx.beginPath()
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(245,197,66,${p.alpha})`
-        ctx.fill()
-      }
-      // Pass 2: royal blue
-      ctx.shadowColor = 'rgba(91,116,240,0.9)'
-      for (const p of particles) {
-        if (p.hue !== 230) continue
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(91,116,240,${p.alpha})`
+        ctx.arc(p.x, p.y, halo, 0, Math.PI * 2)
+        ctx.fillStyle = grad
         ctx.fill()
       }
 
       // ── Connection lines (spatially bucketed) ────────────────────────────
-      ctx.shadowBlur = 0
+      // shadowBlur is already 0 (never set above — no reset needed)
       const { map, cols, key } = buildBuckets(particles)
 
       for (const p of particles) {

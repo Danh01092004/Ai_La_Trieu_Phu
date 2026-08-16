@@ -24,7 +24,9 @@ const REASON_TEXT: Record<string, string> = {
 const CHICKEN_HUES = ['#f8fafc', '#fef3c7', '#fde68a', '#fef9c3', '#ffffff', '#fed7aa']
 const CHICKEN_STYLES: ('run' | 'jump' | 'spin')[] = ['run', 'jump', 'spin']
 
-/** Deterministic-per-mount flock of 26 chickens with fully randomised motion. */
+/** Deterministic-per-mount flock of 13 chickens with fully randomised motion.
+ *  Halved from 26 to reduce simultaneous Framer Motion animation count
+ *  (was 104 FM loops; now 52) while keeping the scene visually chaotic. */
 function buildFlock(count: number) {
   const rand = (a: number, b: number) => a + Math.random() * (b - a)
   const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)]
@@ -43,7 +45,7 @@ function buildFlock(count: number) {
 export const LosePopup = memo(function LosePopup({ candies, reason, reachedLevel, total, onRetry, onHome }: Props) {
   const { playSfx } = useSettings()
   const isRetire = reason === 'retired'
-  const flock = useMemo(() => buildFlock(26), [])
+  const flock = useMemo(() => buildFlock(13), [])
 
   // A staggered barrage of chicken squawks with comic timing. Suppressed for
   // graceful retirement — retire is a player choice, not a disaster.
