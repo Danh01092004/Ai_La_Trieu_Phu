@@ -1,13 +1,29 @@
-import { HashRouter, Routes, Route } from 'react-router-dom'
-import { lazy, Suspense } from 'react'
+import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom'
+import { lazy, Suspense, useEffect } from 'react'
 import { SettingsProvider } from '@/state/SettingsContext'
 import { Home } from '@/pages/Home'
 import { Leaderboard } from '@/pages/Leaderboard'
+import { hasRoomSession } from '@/multiplayer/session'
 
 // Lazy-load the multiplayer battlefield so the landing page stays tiny.
 const Multiplayer = lazy(() =>
   import('@/pages/multi/Multiplayer').then((m) => ({ default: m.Multiplayer })),
 )
+
+/**
+ * The host tab can be restored at "/" after a browser freeze/crash. If this tab
+ * still owns a room session, send it back to the arena instead of showing the
+ * landing page while the server room keeps playing in the background.
+ */
+function HomeRoute() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (hasRoomSession()) navigate('/multiplayer', { replace: true })
+  }, [navigate])
+
+  return <Home />
+}
 
 /**
  * Route table. Pages animate their own entrance; navigation unmounts the old
@@ -17,7 +33,7 @@ const Multiplayer = lazy(() =>
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<HomeRoute />} />
       <Route path="/leaderboard" element={<Leaderboard />} />
       <Route
         path="/multiplayer/*"

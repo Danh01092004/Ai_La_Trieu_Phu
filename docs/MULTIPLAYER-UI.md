@@ -32,7 +32,7 @@ Single-player đã bị bỏ khỏi UI và source. Home còn **VÀO ĐẤU TRƯ�
   7. Quản trò `CHƠI LẠI` → lobby, reset điểm/trợ giúp; người chơi chờ.
 - **Edge cases:**
   - Mất kết nối: badge đỏ, đáp án khóa; Socket.IO tự thử lại vô hạn trong grace 60 giây rồi resume.
-  - Refresh/F5: tự khôi phục phòng, câu, đáp án đã khóa, điểm, trợ giúp và vai trò (admin/player). Nếu ack resume bị mất, client tự thử lại 2 lần; token cũ/không hợp lệ thì xoá phiên và về form vào phòng.
+  - Refresh/F5: tự khôi phục phòng, câu, đáp án đã khóa, điểm, trợ giúp và vai trò (admin/player). Nếu ack resume bị mất, client tự thử lại 2 lần; token vừa xoay còn hiệu lực 60 giây để lần thử lại không bị đẩy về form. Token không hợp lệ/hết hạn thì xoá phiên và về form vào phòng.
   - All-time: kết quả final ghi JSON atomic; khởi động lại server vẫn hiển thị đúng trên `/leaderboard`.
   - Token hết hạn/hết grace: xoá phiên, hiện thông báo tiếng Việt và về màn vào phòng.
   - Gửi trùng: `ALREADY_ANSWERED`; UI giữ khóa.

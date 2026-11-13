@@ -53,6 +53,19 @@ interface BlockedEntry extends BlockedPlayerState {
   clientId: string
 }
 
+interface ResumeTokenEntry {
+  code: string
+  playerId: string
+  /**
+   * Set on the token that was just rotated out. It stays usable for a short
+   * grace window so a client that lost the resume ack can retry with the token
+   * it still has instead of being kicked to the entry screen.
+   */
+  expiresAt?: number
+}
+
+const RESUME_ACK_GRACE_MS = 60_000
+
 /** Server-only room state. Matches and deadlines live in GameManager. */
 export interface Room {
   code: string
@@ -174,7 +187,7 @@ export class RoomManager {
   private readonly playerRooms = new Map<string, string>()
   /** Current transport socket id → stable member id. */
   private readonly socketPlayers = new Map<string, string>()
-  private readonly resumeTokens = new Map<string, { code: string; playerId: string }>()
+  private readonly resumeTokens = new Map<string, ResumeTokenEntry>()
 
   create(socketId: string, rawName: unknown, rawClientId?: unknown): CreateRoomResult {
     const name = normalizePlayerName(rawName)
@@ -292,14 +305,23 @@ export class RoomManager {
       return fail('INVALID_RESUME_TOKEN', 'Phiên phòng không hợp lệ.')
     }
 
+    const now = Date.now()
+    this.pruneExpiredResumeTokens(now)
+
     const entry = this.resumeTokens.get(rawToken)
     if (!entry) {
+      return fail('INVALID_RESUME_TOKEN', 'Phiên phòng đã hết hạn.')
+    }
+    if (entry.expiresAt !== undefined && entry.expiresAt <= now) {
+      this.resumeTokens.delete(rawToken)
       return fail('INVALID_RESUME_TOKEN', 'Phiên phòng đã hết hạn.')
     }
 
     const room = this.rooms.get(entry.code)
     const player = room?.players.get(entry.playerId)
-    if (!room || !player || player.resumeToken !== rawToken) {
+    const isCurrentToken = player?.resumeToken === rawToken
+    const isGraceToken = entry.expiresAt !== undefined
+    if (!room || !player || (!isCurrentToken && !isGraceToken)) {
       this.resumeTokens.delete(rawToken)
       return fail('INVALID_RESUME_TOKEN', 'Phiên phòng đã hết hạn.')
     }
@@ -309,16 +331,25 @@ export class RoomManager {
     }
 
     const previousSocketId = player.connected ? player.socketId : null
-    if (previousSocketId) this.socketPlayers.delete(previousSocketId)
-    this.resumeTokens.delete(rawToken)
+    if (previousSocketId && previousSocketId !== socketId) {
+      this.socketPlayers.delete(previousSocketId)
+    }
 
     const nextToken = this.generateResumeToken()
     player.connected = true
     player.socketId = socketId
     player.resumeToken = nextToken
     this.socketPlayers.set(socketId, player.id)
+    // Keep the presented token as a short-lived alias. This makes resume
+    // idempotent when the ack is lost: the client still holds `rawToken` and
+    // can retry instead of receiving INVALID_RESUME_TOKEN and losing its UI.
+    this.resumeTokens.set(rawToken, {
+      code: room.code,
+      playerId: player.id,
+      expiresAt: now + RESUME_ACK_GRACE_MS,
+    })
     this.resumeTokens.set(nextToken, { code: room.code, playerId: player.id })
-    room.lastActivity = Date.now()
+    room.lastActivity = now
 
     return {
       ok: true,
@@ -625,7 +656,7 @@ export class RoomManager {
 
   private removeMember(room: Room, member: RoomPlayer): void {
     if (member.socketId) this.socketPlayers.delete(member.socketId)
-    this.resumeTokens.delete(member.resumeToken)
+    this.removeResumeTokensFor(member.id)
     room.players.delete(member.id)
     this.playerRooms.delete(member.id)
   }
@@ -634,12 +665,26 @@ export class RoomManager {
   private destroy(room: Room): void {
     for (const member of room.players.values()) {
       if (member.socketId) this.socketPlayers.delete(member.socketId)
-      this.resumeTokens.delete(member.resumeToken)
+      this.removeResumeTokensFor(member.id)
       this.playerRooms.delete(member.id)
     }
     room.players.clear()
     room.blocked.clear()
     this.rooms.delete(room.code)
+  }
+
+  private removeResumeTokensFor(playerId: string): void {
+    for (const [token, entry] of this.resumeTokens) {
+      if (entry.playerId === playerId) this.resumeTokens.delete(token)
+    }
+  }
+
+  private pruneExpiredResumeTokens(now: number): void {
+    for (const [token, entry] of this.resumeTokens) {
+      if (entry.expiresAt !== undefined && entry.expiresAt <= now) {
+        this.resumeTokens.delete(token)
+      }
+    }
   }
 
   private generateResumeToken(): string {

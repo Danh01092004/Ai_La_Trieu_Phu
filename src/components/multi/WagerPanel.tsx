@@ -90,7 +90,9 @@ export function WagerPanel({
   )
   const hasWager = percent > 0
   const secondsToLock = Math.max(1, Math.ceil(remainingMs / 1_000))
-  const allDisabled = locked || busy || disabled
+  // Keep the percentages clickable while an older wager request is in flight:
+  // rapid 25% → 100% changes must reach the server before the lock.
+  const allDisabled = locked || disabled
 
   return (
     <section

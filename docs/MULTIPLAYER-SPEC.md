@@ -68,7 +68,7 @@ Trong mỗi câu, người chơi có thể chọn **10% / 25% / 100%** số gói
 wagerAmount = floor(currentScore * percent / 100)
 ```
 
-- Chọn được nhiều lần; server khóa ở **3 giây cuối** (`wagerLockAt = endsAt - 3000`).
+- Chọn được nhiều lần; server khóa ở **3 giây cuối** (`wagerLockAt = endsAt - 3000`). Đổi nhanh 25% → 100% phải gửi được mức mới nhất; ack cũ không được ghi đè lựa chọn mới.
 - Đúng: `score += reward + wagerAmount`.
 - Sai/hết giờ: không nhận `reward`, đồng thời `score -= wagerAmount` (không xuống dưới 0).
 - `10%`/`25%` có thể làm tròn xuống 0 khi số gói còn ít; UI khóa mức đó và server trả `WAGER_NOT_AVAILABLE`.
@@ -171,7 +171,7 @@ Express 5 + Socket.IO 4 ──────────────┘
 - Public packet được dựng sẵn lúc start; mỗi câu chỉ phát riêng cho từng người chơi.
 - `game:reveal`/`game:end` phát riêng từng socket vì payload có dữ liệu cá nhân; quản trò không nhận các packet này.
 - Quản trò chỉ join personal room và nhận `admin:state`. Người chơi join room channel + personal room.
-- Resume: token ngẫu nhiên 32 byte, xoay vòng sau mỗi lần resume; socket cũ bị ngắt; token hết hiệu lực khi người chơi rời phòng hoặc hết grace. Nếu ack resume bị mất do mạng chập chờn, client tự thử lại tối đa 2 lần (1,2 s/lần) và chỉ áp dụng kết quả cho đúng token đã gửi.
+- Resume: token ngẫu nhiên 32 byte, xoay vòng sau mỗi lần resume; socket cũ bị ngắt; token hết hiệu lực khi người chơi rời phòng hoặc hết grace. Token vừa bị xoay được giữ làm alias trong **60 giây** để client thử lại khi ack resume bị mất, tránh bị đẩy về màn hình nhập phòng trong lúc phòng vẫn chạy. Client tự thử lại tối đa 2 lần (1,2 s/lần) và chỉ áp dụng kết quả cho đúng token đã gửi; khi tab quay lại từ nền, client resume theo snapshot mới nhất.
 - F5/reconnect dùng `sessionStorage` theo tab; mở tab thứ hai bằng link mời sẽ vào như người chơi mới.
 - Grace mặc định **60 s** (`DISCONNECT_GRACE_MS`), ghế/điểm/trợ giúp/vai trò quản trò được giữ. Hết grace: xoá ghế người chơi; quản trò hết grace thì **đóng phòng**, không chuyển vai trò.
 - Kick chỉ mời ra; người chơi có thể vào lại khi phòng ở **lobby** (sau ván hoặc trước khi bắt đầu). Block chặn theo **tên chuẩn hoá hoặc clientId** cho đến khi quản trò bỏ chặn.
@@ -228,7 +228,7 @@ $env:QUESTION_COUNT='3'; $env:QUESTION_MS='300'; $env:REVEAL_MS='300'; $env:LOSE
 - `test:game` (15 câu, 300 ms, reveal 300): 15 câu unique, cùng deadline, không lộ đáp án, validation đúng.
 - `test:flow` (3 câu): scoring 1→2, reveal, 4 trợ giúp, 50:50 chặn `ANSWER_REMOVED`, dùng lại `LIFELINE_ALREADY_USED`, request sai câu `WRONG_QUESTION`, final + rematch, API all-time có kết quả vừa ghi.
 - `test:load`: **1 quản trò + 40 người chơi**, 3 câu hoặc đủ 15 câu, mỗi người trả lời mỗi câu; final BXH 40 người, không có quản trò; dashboard quản trò 40 dòng; người thứ 41 bị `ROOM_FULL`; đo p95 broadcast và assert **<300 ms**.
-- `test:resume` (server 3 câu/3 s, grace 8 s): resume lobby/câu/reveal/final cho cả quản trò và người chơi; token xoay vòng; token cũ bị từ chối; hết grace xoá ghế người chơi; quản trò hết grace đóng phòng (`room:closed` reason `admin_timeout`).
+- `test:resume` (server 3 câu/3 s, grace 8 s): resume lobby/câu/reveal/final cho cả quản trò và người chơi; token xoay vòng; token cũ vẫn resume được trong cửa sổ 60 giây (mô phỏng ack bị mất) nhưng bị từ chối sau khi rời phòng; hết grace xoá ghế người chơi; quản trò hết grace đóng phòng (`room:closed` reason `admin_timeout`).
 - Browser: F5 lobby/câu đã khóa đáp án/final khôi phục đúng; F5 quản trò khi đang câu vẫn giữ dashboard; BXH all-time API/UI; mobile 390×844 không tràn.
 - Browser B11 (6 người, 3 câu, `LOSE_MS=1000`): sai giữa câu mở `#/multiplayer/chicken` nhanh rồi về reveal, nhạc lose tiếp tục; final hạng **6/6** hiện page gà "CHƯA VÀO TOP 5!", `loseDurationMs` từ `game:end`, sau đó BXH thua không confetti/victory. Hạng 1–5 vào thẳng màn tổng kết thường.
 - Browser B12: dashboard quản trò chỉ có BXH/trạng thái, không có nội dung câu; kick P1 rồi P1 vào lại được; block P2 rồi P2 bị từ chối, bỏ chặn thì vào lại được; start khi đủ 2 người, quản trò vẫn không nhận câu; final + CHƠI LẠI về lobby đúng. Nút start hiển thị số người thay vì `6/2`.

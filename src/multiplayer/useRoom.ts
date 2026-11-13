@@ -24,14 +24,15 @@ import type {
   WagerAck,
   WagerPercent,
 } from '@/types/multiplayer'
+import { wagerForScore } from '@/config/multiplayerConfig'
 import { getMultiplayerSocket, type MultiplayerSocket } from './socket'
 import { gameErrorMessage, roomErrorMessage } from './messages'
+import { ROOM_SESSION_KEY } from './session'
 
 export type RoomConnectionStatus = 'connecting' | 'connected' | 'disconnected'
 
 const REQUEST_TIMEOUT_MS = 7_000
 const LEAVE_TIMEOUT_MS = 3_000
-const SESSION_KEY = 'altp:multiplayer:session:v2'
 const CLIENT_ID_KEY = 'altp:multiplayer:client:v1'
 const CLIENT_ID_PATTERN = /^[A-Za-z0-9_-]{8,64}$/
 
@@ -94,7 +95,7 @@ interface StoredSession {
 
 function readSession(): StoredSession | null {
   try {
-    const raw = sessionArea()?.getItem(SESSION_KEY)
+    const raw = sessionArea()?.getItem(ROOM_SESSION_KEY)
     if (!raw) return null
     const parsed = JSON.parse(raw) as Partial<StoredSession>
     if (
@@ -113,7 +114,7 @@ function readSession(): StoredSession | null {
 
 function writeSession(session: StoredSession): void {
   try {
-    sessionArea()?.setItem(SESSION_KEY, JSON.stringify(session))
+    sessionArea()?.setItem(ROOM_SESSION_KEY, JSON.stringify(session))
   } catch {
     // Private mode/quota failures must not block the game itself.
   }
@@ -121,7 +122,7 @@ function writeSession(session: StoredSession): void {
 
 function clearSession(): void {
   try {
-    sessionArea()?.removeItem(SESSION_KEY)
+    sessionArea()?.removeItem(ROOM_SESSION_KEY)
   } catch {
     // Ignore storage failures.
   }
@@ -299,14 +300,31 @@ export function useRoom() {
   const sessionRef = useRef<StoredSession | null>(readSession())
   const resumeInFlightRef = useRef(false)
   const resumeRetryRef = useRef<number | null>(null)
+  const hiddenAtRef = useRef<number | null>(null)
+  const revealRef = useRef<GameRevealPayload | null>(null)
+  const serverOffsetRef = useRef(0)
   const questionRef = useRef<GameQuestionPayload | null>(null)
   const answeredRef = useRef(false)
   const submittingRef = useRef(false)
-  const wagerBusyRef = useRef(false)
+  const wagerSeqRef = useRef(0)
+  const wagerPendingRef = useRef(0)
+  const wagerAcceptedRef = useRef<{ questionIndex: number; percent: WagerPercent; amount: number }>({
+    questionIndex: 0,
+    percent: 0,
+    amount: 0,
+  })
   const busyRef = useRef(false)
   const lifelineBusyRef = useRef(false)
   const lifelinesRef = useRef<LifelineState>(EMPTY_LIFELINES)
   const mountedRef = useRef(true)
+
+  useEffect(() => {
+    revealRef.current = reveal
+  }, [reveal])
+
+  useEffect(() => {
+    serverOffsetRef.current = serverOffset
+  }, [serverOffset])
 
   const commitRoom = useCallback((next: RoomState | null) => {
     roomRef.current = next
@@ -334,7 +352,10 @@ export function useRoom() {
   }, [])
 
   const resetWager = useCallback(() => {
-    wagerBusyRef.current = false
+    // Invalidate any in-flight ack from the previous question.
+    wagerSeqRef.current += 1
+    wagerPendingRef.current = 0
+    wagerAcceptedRef.current = { questionIndex: 0, percent: 0, amount: 0 }
     setWagerBusy(false)
     setWagerPercent(0)
     setWagerAmount(0)
@@ -344,6 +365,7 @@ export function useRoom() {
   const commitQuestion = useCallback(
     (next: GameQuestionPayload | null) => {
       questionRef.current = next
+      revealRef.current = null
       setQuestion(next)
       clearAnswer()
       resetWager()
@@ -421,6 +443,7 @@ export function useRoom() {
         setAnswered(true)
         setSelectedAnswer(snapshot.reveal.yourAnswer)
         setServerOffset(snapshot.reveal.serverNow - Date.now())
+        revealRef.current = snapshot.reveal
         setReveal(snapshot.reveal)
         return
       }
@@ -548,6 +571,46 @@ export function useRoom() {
       setError(`Không kết nối được máy chủ: ${reason.message}`)
     }
 
+    /**
+     * Mobile Chrome/Safari can freeze a background tab long enough to miss a
+     * question transition. Resume from the authoritative snapshot when the tab
+     * wakes up so the UI cannot stay one question behind (or on the old reveal).
+     */
+    const hasStaleReveal = () => {
+      const current = revealRef.current
+      if (!current) return false
+      return Date.now() + serverOffsetRef.current > current.revealEndsAt + 1_000
+    }
+
+    const resumeAfterWake = (force = false) => {
+      if (!mountedRef.current) return
+      if (document.visibilityState === 'hidden' && !force) return
+      const hiddenFor = hiddenAtRef.current === null ? 0 : Date.now() - hiddenAtRef.current
+      hiddenAtRef.current = null
+      if (!force && hiddenFor < 1_500 && !hasStaleReveal()) return
+      if (socket.connected && sessionRef.current) void attemptResume()
+    }
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        hiddenAtRef.current = Date.now()
+        return
+      }
+      resumeAfterWake(hasStaleReveal())
+    }
+
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) resumeAfterWake(true)
+    }
+
+    const onWindowFocus = () => {
+      if (hiddenAtRef.current !== null || hasStaleReveal()) resumeAfterWake(true)
+    }
+
+    const onOnline = () => {
+      if (socket.connected && sessionRef.current) void attemptResume()
+    }
+
     const onRoomState = (next: RoomState) => {
       if (!mountedRef.current) return
       commitRoom(next)
@@ -628,6 +691,7 @@ export function useRoom() {
       setSubmitting(false)
       setAnswerError(null)
       setAnswerErrorCode(null)
+      revealRef.current = next
       setReveal(next)
     }
 
@@ -639,6 +703,7 @@ export function useRoom() {
       if (current && current.status !== 'final') {
         commitRoom({ ...current, status: 'final' })
       }
+      revealRef.current = null
       setReveal(null)
       commitQuestion(null)
       setFinal(next)
@@ -655,6 +720,10 @@ export function useRoom() {
     socket.on('game:question', onGameQuestion)
     socket.on('game:reveal', onGameReveal)
     socket.on('game:end', onGameEnd)
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    window.addEventListener('pageshow', onPageShow)
+    window.addEventListener('focus', onWindowFocus)
+    window.addEventListener('online', onOnline)
 
     if (socket.connected) {
       setStatus('connected')
@@ -678,6 +747,10 @@ export function useRoom() {
       socket.off('game:question', onGameQuestion)
       socket.off('game:reveal', onGameReveal)
       socket.off('game:end', onGameEnd)
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+      window.removeEventListener('pageshow', onPageShow)
+      window.removeEventListener('focus', onWindowFocus)
+      window.removeEventListener('online', onOnline)
 
       // An explicit unmount (leaving /multiplayer) ends the session. Defer
       // by one task so React StrictMode's dev-only fake unmount does not wipe
@@ -932,13 +1005,16 @@ export function useRoom() {
   )
 
   /**
-   * Wagers can be changed several times before the server lock. The ack is
-   * authoritative because it contains the package amount computed server-side.
+   * Wagers can be changed several times before the server lock. A newer click
+   * must never be dropped just because an older request is still in flight:
+   * the server applies wager events in order, so the last accepted intent wins.
+   * Each request carries a sequence number and only the newest ack may update
+   * the visible selection.
    */
   const submitWager = useCallback(
     async (percent: WagerPercent): Promise<boolean> => {
       const current = questionRef.current
-      if (!current || wagerBusyRef.current) return false
+      if (!current) return false
 
       if (!socket.connected) {
         setWagerError('Chưa kết nối được máy chủ. Chưa đổi được mức mang thêm.')
@@ -946,9 +1022,16 @@ export function useRoom() {
       }
 
       const questionIndex = current.index
-      wagerBusyRef.current = true
+      const score =
+        roomRef.current?.players.find((player) => player.id === playerIdRef.current)?.score ?? 0
+      const seq = (wagerSeqRef.current += 1)
+      wagerPendingRef.current += 1
       setWagerBusy(true)
       setWagerError(null)
+      // Optimistic selection makes rapid 25% → 100% clicks visible immediately;
+      // the server ack below remains authoritative for the package amount.
+      setWagerPercent(percent)
+      setWagerAmount(percent === 0 ? 0 : wagerForScore(score, percent))
 
       try {
         const result = await timeout(
@@ -962,21 +1045,46 @@ export function useRoom() {
         }
 
         if (!result.ok) {
+          // A newer selection may still succeed; only the latest request owns
+          // the visible error/rollback.
+          if (seq !== wagerSeqRef.current) return false
+          const accepted = wagerAcceptedRef.current
+          if (accepted.questionIndex === questionIndex) {
+            setWagerPercent(accepted.percent)
+            setWagerAmount(accepted.amount)
+          }
           setWagerError(gameErrorMessage(result))
           return false
         }
+
+        wagerAcceptedRef.current = {
+          questionIndex,
+          percent: result.percent,
+          amount: result.amount,
+        }
+        // Ignore a stale ack; the newest request will paint the final state.
+        if (seq !== wagerSeqRef.current) return false
 
         setWagerPercent(result.percent)
         setWagerAmount(result.amount)
         return true
       } catch (requestError: unknown) {
-        if (mountedRef.current && questionRef.current?.index === questionIndex) {
+        if (
+          mountedRef.current &&
+          questionRef.current?.index === questionIndex &&
+          seq === wagerSeqRef.current
+        ) {
+          const accepted = wagerAcceptedRef.current
+          if (accepted.questionIndex === questionIndex) {
+            setWagerPercent(accepted.percent)
+            setWagerAmount(accepted.amount)
+          }
           setWagerError(errorMessage(requestError))
         }
         return false
       } finally {
-        wagerBusyRef.current = false
-        if (mountedRef.current) setWagerBusy(false)
+        wagerPendingRef.current = Math.max(0, wagerPendingRef.current - 1)
+        if (mountedRef.current && wagerPendingRef.current === 0) setWagerBusy(false)
       }
     },
     [socket],

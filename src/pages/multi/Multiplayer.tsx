@@ -239,7 +239,9 @@ export function Multiplayer() {
 
   const handleRoomHome = () => {
     playSfx('click')
-    navigate('/')
+    // Leaving the arena must also free the server seat. Otherwise the room
+    // keeps running invisibly and HomeRoute would immediately resume it.
+    void leaveRoom().then(() => navigate('/'))
   }
 
   const handleLeave = () => {

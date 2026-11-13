@@ -178,6 +178,18 @@ async function main(): Promise<void> {
     }
     assert.notEqual(adminToken, created.resumeToken, 'resume token must rotate')
 
+    // Simulate a lost resume ack: the client still has the pre-rotation token.
+    // Retrying it inside the grace window must not throw the admin back to the
+    // entry screen while the server room keeps running.
+    const graceAdminSocket = await connect()
+    const graceRetry = await resume(graceAdminSocket, created.resumeToken)
+    assert.equal(graceRetry.role, 'admin')
+    assert.equal(graceRetry.playerId, adminId)
+    assert.notEqual(graceRetry.resumeToken, adminToken)
+    admin.close()
+    admin = graceAdminSocket
+    adminToken = graceRetry.resumeToken
+
     // The room needs 2 real players to start; this filler leaves right after
     // the start so the rest of the assertions can focus on one player.
     const fillerSocket = await connect()
