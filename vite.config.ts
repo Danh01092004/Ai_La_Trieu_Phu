@@ -18,7 +18,39 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    // Expose the dev server on the LAN so phones can join a room while testing.
+    host: true,
     open: true,
+    // Pre-transform the multiplayer route while Vite starts, so the first
+    // hover/tap on Home does not pay the full dev-module graph cost.
+    warmup: {
+      clientFiles: [
+        './src/pages/multi/Multiplayer.tsx',
+        './src/components/multi/RoomLobby.tsx',
+        './src/components/multi/MatchStarting.tsx',
+        './src/components/multi/MultiplayerGame.tsx',
+        './src/components/multi/MultiplayerReveal.tsx',
+        './src/components/multi/MultiplayerFinal.tsx',
+        './src/components/multi/MultiLifelines.tsx',
+        './src/components/multi/LifelineResultCard.tsx',
+        './src/components/multi/ChickenLossPage.tsx',
+        './src/components/multi/MultiQuestionTimer.tsx',
+        './src/multiplayer/useRoom.ts',
+        './src/pages/Leaderboard.tsx',
+      ],
+    },
+    proxy: {
+      '/socket.io': {
+        target: 'http://127.0.0.1:3001',
+        ws: true,
+      },
+      '/api': {
+        target: 'http://127.0.0.1:3001',
+      },
+      '/healthz': {
+        target: 'http://127.0.0.1:3001',
+      },
+    },
   },
   build: {
     // Increase the warning threshold slightly (407KB is fine for a game)
@@ -39,6 +71,6 @@ export default defineConfig({
   },
   // Optimize dependency pre-bundling
   optimizeDeps: {
-    include: ['react', 'react-dom', 'framer-motion', 'howler'],
+    include: ['react', 'react-dom', 'framer-motion', 'howler', 'socket.io-client'],
   },
 })

@@ -193,5 +193,70 @@
     "correct": 0,
     "difficulty": "hard",
     "explanation": "Việc chủ động hội nhập quốc tế, mở rộng quan hệ đối ngoại, trở thành bạn và đối tác tin cậy, thành viên có trách nhiệm của cộng đồng quốc tế, đồng thời củng cố khối đại đoàn kết toàn dân tộc thể hiện sự vận dụng tư tưởng Hồ Chí Minh trong giai đoạn hiện nay."
+  },
+  {
+    "id": 16,
+    "question": "Theo Hồ Chí Minh, lực lượng nào giữ vai trò lãnh đạo khối đại đoàn kết toàn dân tộc?",
+    "answers": [
+      "Đảng Cộng sản Việt Nam",
+      "Nhà nước Việt Nam Dân chủ Cộng hòa",
+      "Mặt trận Tổ quốc Việt Nam",
+      "Các tổ chức quần chúng"
+    ],
+    "correct": 0,
+    "difficulty": "medium",
+    "explanation": "Hồ Chí Minh khẳng định Đảng Cộng sản Việt Nam là lực lượng lãnh đạo khối đại đoàn kết toàn dân tộc. Đảng phải gắn bó máu thịt với nhân dân, xây dựng khối đoàn kết rộng rãi và bền vững."
+  },
+  {
+    "id": 17,
+    "question": "Cơ sở tư tưởng của đoàn kết quốc tế theo Hồ Chí Minh là sự kết hợp giữa hai yếu tố nào?",
+    "answers": [
+      "Chủ nghĩa dân tộc hẹp hòi với chủ nghĩa thực dân",
+      "Chủ nghĩa yêu nước chân chính với chủ nghĩa quốc tế vô sản",
+      "Chủ nghĩa tự do cá nhân với chủ nghĩa đa phương",
+      "Chủ nghĩa bảo hộ với chủ nghĩa khu vực"
+    ],
+    "correct": 1,
+    "difficulty": "medium",
+    "explanation": "Hồ Chí Minh kết hợp chủ nghĩa yêu nước chân chính với chủ nghĩa quốc tế vô sản. Đoàn kết quốc tế phải xuất phát từ lợi ích dân tộc và lợi ích chung của nhân loại tiến bộ."
+  },
+  {
+    "id": 18,
+    "question": "Trong tư tưởng Hồ Chí Minh, tự phê bình và phê bình trong khối đoàn kết nhằm mục đích gì?",
+    "answers": [
+      "Loại trừ những người có ý kiến khác",
+      "Giữ nguyên mọi quan điểm cá nhân",
+      "Che giấu khuyết điểm để bảo vệ uy tín",
+      "Củng cố và tăng cường đoàn kết"
+    ],
+    "correct": 3,
+    "difficulty": "medium",
+    "explanation": "Hồ Chí Minh coi tự phê bình và phê bình là vũ khí để sửa chữa khuyết điểm, thống nhất tư tưởng và củng cố đoàn kết, chứ không phải để chia rẽ hoặc loại trừ người có ý kiến khác."
+  },
+  {
+    "id": 19,
+    "question": "Hồ Chí Minh chủ trương giải quyết quan hệ giữa lợi ích chung và lợi ích riêng trong khối đại đoàn kết như thế nào?",
+    "answers": [
+      "Lấy lợi ích chung làm điểm quy tụ, tôn trọng lợi ích khác biệt chính đáng",
+      "Chỉ quan tâm lợi ích chung, phủ nhận mọi lợi ích riêng",
+      "Đặt lợi ích riêng lên trên lợi ích chung",
+      "Không cần giải quyết vì lợi ích các bên luôn giống nhau"
+    ],
+    "correct": 0,
+    "difficulty": "hard",
+    "explanation": "Hồ Chí Minh lấy lợi ích chung của dân tộc làm điểm quy tụ, đồng thời tôn trọng và giải quyết hài hòa các lợi ích khác biệt chính đáng của từng giai cấp, tầng lớp, dân tộc và tôn giáo."
+  },
+  {
+    "id": 20,
+    "question": "Theo Hồ Chí Minh, sự nghiệp cách mạng là sự nghiệp của lực lượng nào?",
+    "answers": [
+      "Của một nhóm lãnh đạo ưu tú",
+      "Của quần chúng nhân dân",
+      "Của lực lượng vũ trang",
+      "Của các tổ chức quốc tế"
+    ],
+    "correct": 1,
+    "difficulty": "medium",
+    "explanation": "Hồ Chí Minh khẳng định cách mạng là sự nghiệp của quần chúng nhân dân. Nhân dân là chủ thể, là nguồn sức mạnh và là người quyết định thắng lợi của cách mạng."
   }
 ]

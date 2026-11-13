@@ -47,8 +47,10 @@ const FADE_OUT = 800   // spec says 800 ms
 // unmount→remount cycle, which destroys instance state but leaves module
 // scope intact.  The Howl object itself is also stored here so it is truly
 // created only once per page load.
-let _bgHowl:   Howl | null = null   // the one background Howl, ever
+let _bgHowl:   Howl | null = null    // the one background Howl, ever
 let _bgSoundId: number | null = null // sound-node ID returned by play()
+/** Pending "pause after fade-out" timer — cancelled when music restarts. */
+let _bgStopTimer: number | null = null
 
 // ---------------------------------------------------------------------------
 
@@ -160,6 +162,19 @@ class SoundManager {
     this._ensureBgHowl()
     const howl = _bgHowl!
 
+    // Any scheduled fade-out→pause from a previous stopMusic() must be
+    // cancelled, otherwise it would silence a track that just restarted.
+    if (_bgStopTimer !== null) {
+      window.clearTimeout(_bgStopTimer)
+      _bgStopTimer = null
+    }
+    // Cancel a fade that is still in flight (Howler only auto-cancels group
+    // fades, not per-sound ones, so we do it explicitly by re-setting volume).
+    if (_bgSoundId !== null) {
+      const inFlight = howl.volume(_bgSoundId) as number
+      howl.volume(inFlight, _bgSoundId)
+    }
+
     // ── Case 1: sound node exists and is actively playing ──────────────────
     if (_bgSoundId !== null && howl.playing(_bgSoundId)) {
       console.log('[Audio] Background already playing — skipping startMusic()')
@@ -200,15 +215,24 @@ class SoundManager {
     if (!howl.playing(id)) return
 
     console.log('[Audio] Background fade')
+    if (_bgStopTimer !== null) {
+      window.clearTimeout(_bgStopTimer)
+      _bgStopTimer = null
+    }
     const fromVol = howl.volume(id) as number
+    // Re-setting the volume cancels any fade still running for this sound
+    // (Howler does not cancel per-id fades automatically).
+    howl.volume(fromVol, id)
     howl.fade(fromVol, 0, fadeDuration, id)
-    howl.once('fade', () => {
-      // Guard: only pause if this is still the active node and not restarted.
-      if (_bgSoundId === id && !howl.playing(id)) {
+    // Pause only after the fade has finished — and only if the music has not
+    // been restarted in the meantime (startMusic clears this timer).
+    _bgStopTimer = window.setTimeout(() => {
+      _bgStopTimer = null
+      if (_bgSoundId === id && howl.playing(id)) {
         howl.pause(id)
         console.log('[Audio] Background pause (after fade)')
       }
-    }, id)
+    }, fadeDuration + 80)
   }
 
   // -------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { memo, useRef, useState } from 'react'
 import type { AnswerStatus } from '@/types'
 import { ANSWER_LETTERS, cn } from '@/utils'
@@ -40,16 +40,21 @@ const LETTER_STATUS: Record<AnswerStatus, string> = {
 export const AnswerButton = memo(function AnswerButton({ index, text, status, disabled, onSelect }: Props) {
   const [ripples, setRipples] = useState<Ripple[]>([])
   const rippleId = useRef(0)
+  const reduceMotion = useReducedMotion()
   const { playSfx } = useSettingsActions()
 
   const isInteractive = !disabled && status !== 'removed'
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isInteractive) return
-    const rect = e.currentTarget.getBoundingClientRect()
-    const r = { id: rippleId.current++, x: e.clientX - rect.left, y: e.clientY - rect.top }
-    setRipples((prev) => [...prev, r])
-    setTimeout(() => setRipples((prev) => prev.filter((p) => p.id !== r.id)), 650)
+
+    if (!reduceMotion) {
+      const rect = e.currentTarget.getBoundingClientRect()
+      const r = { id: rippleId.current++, x: e.clientX - rect.left, y: e.clientY - rect.top }
+      setRipples((prev) => [...prev, r])
+      setTimeout(() => setRipples((prev) => prev.filter((p) => p.id !== r.id)), 650)
+    }
+
     onSelect(index)
   }
 
@@ -59,15 +64,15 @@ export const AnswerButton = memo(function AnswerButton({ index, text, status, di
       disabled={!isInteractive}
       onClick={handleClick}
       onMouseEnter={() => isInteractive && playSfx('hover')}
-      initial={{ opacity: 0, y: 24 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       animate={{
         opacity: status === 'removed' ? 0 : 1,
         y: 0,
         scale: status === 'removed' ? 0.9 : 1,
       }}
-      transition={{ duration: 0.4, delay: index * 0.08, ease: 'easeOut' }}
-      whileHover={isInteractive ? { scale: 1.03 } : undefined}
-      whileTap={isInteractive ? { scale: 0.97 } : undefined}
+      transition={reduceMotion ? { duration: 0 } : { duration: 0.4, delay: index * 0.08, ease: 'easeOut' }}
+      whileHover={isInteractive && !reduceMotion ? { scale: 1.03 } : undefined}
+      whileTap={isInteractive && !reduceMotion ? { scale: 0.97 } : undefined}
       className={cn(
         'group relative flex w-full items-center overflow-hidden rounded-2xl border-2 text-left backdrop-blur-md transition-colors duration-300',
         'font-body',

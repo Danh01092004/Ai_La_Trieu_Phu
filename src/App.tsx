@@ -1,37 +1,41 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
 import { lazy, Suspense } from 'react'
-import { useLocation } from 'react-router-dom'
 import { SettingsProvider } from '@/state/SettingsContext'
-import { GameResultProvider } from '@/state/GameResultContext'
 import { Home } from '@/pages/Home'
+import { Leaderboard } from '@/pages/Leaderboard'
 
-// Lazy-load heavy pages → separate JS chunks for better initial load
-const Game   = lazy(() => import('@/pages/Game').then(m => ({ default: m.Game })))
-const Result = lazy(() => import('@/pages/Result').then(m => ({ default: m.Result })))
+// Lazy-load the multiplayer battlefield so the landing page stays tiny.
+const Multiplayer = lazy(() =>
+  import('@/pages/multi/Multiplayer').then((m) => ({ default: m.Multiplayer })),
+)
 
-function AnimatedRoutes() {
-  const location = useLocation()
+/**
+ * Route table. Pages animate their own entrance; navigation unmounts the old
+ * page immediately on purpose. Single-player has been retired — every play
+ * action now lands in the 40-player arena.
+ */
+function AppRoutes() {
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Home />} />
-        <Route path="/game"   element={<Suspense fallback={null}><Game /></Suspense>} />
-        <Route path="/result" element={<Suspense fallback={null}><Result /></Suspense>} />
-        <Route path="*" element={<Home />} />
-      </Routes>
-    </AnimatePresence>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/leaderboard" element={<Leaderboard />} />
+      <Route
+        path="/multiplayer/*"
+        element={<Suspense fallback={null}><Multiplayer /></Suspense>}
+      />
+      <Route path="*" element={<Home />} />
+    </Routes>
   )
 }
 
 export default function App() {
   return (
     <SettingsProvider>
-      <GameResultProvider>
-        <HashRouter>
-          <AnimatedRoutes />
-        </HashRouter>
-      </GameResultProvider>
+      <HashRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
+        <AppRoutes />
+      </HashRouter>
     </SettingsProvider>
   )
 }

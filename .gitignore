@@ -4,6 +4,9 @@ node_modules/
 # Production build
 dist/
 
+# Persisted game results (runtime data, not source)
+data/
+
 # Environment variables
 .env
 .env.*

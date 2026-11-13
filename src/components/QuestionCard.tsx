@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import type { Difficulty } from '@/types'
 
 interface Props {
@@ -18,6 +18,7 @@ const DIFF_LABEL: Record<Difficulty, { text: string; className: string }> = {
 
 export const QuestionCard = memo(function QuestionCard({ index, total, question, difficulty }: Props) {
   const diff = DIFF_LABEL[difficulty]
+  const reduceMotion = useReducedMotion()
   return (
     <div className="relative w-full">
       {/* connecting hex nodes above the card (TV style) */}
@@ -35,10 +36,10 @@ export const QuestionCard = memo(function QuestionCard({ index, total, question,
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
-          initial={{ opacity: 0, rotateX: -25, y: 30 }}
+          initial={reduceMotion ? false : { opacity: 0, rotateX: -25, y: 30 }}
           animate={{ opacity: 1, rotateX: 0, y: 0 }}
-          exit={{ opacity: 0, rotateX: 20, y: -30 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          exit={reduceMotion ? undefined : { opacity: 0, rotateX: 20, y: -30 }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           style={{ transformPerspective: 1000 }}
           className="animated-border relative mx-auto rounded-3xl"
         >
@@ -61,9 +62,9 @@ export const QuestionCard = memo(function QuestionCard({ index, total, question,
             <div className="pointer-events-none absolute -bottom-16 -right-10 h-40 w-40 rounded-full bg-purpleglow-400/20 blur-3xl" />
 
             <motion.h2
-              initial={{ opacity: 0 }}
+              initial={reduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
+              transition={reduceMotion ? { duration: 0 } : { delay: 0.2, duration: 0.5 }}
               className="relative z-10 text-center font-body font-medium leading-relaxed text-white"
               style={{ fontSize: 'clamp(1rem, 1.9vw, 1.65rem)' }}
             >
