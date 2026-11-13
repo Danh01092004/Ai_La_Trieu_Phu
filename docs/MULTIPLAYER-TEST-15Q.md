@@ -69,9 +69,9 @@ Sau khi dùng, cả 4 nút đều có dấu `✕` và không dùng lại đượ
 - **Môi trường:** Vite `http://localhost:5173`, server Socket.IO `http://localhost:3001`, timing test nhanh `QUESTION_MS=1000`, `REVEAL_MS=600`, `LOSE_MS=600`.
 - **Phòng:** `RPXVCB` — 1 quản trò + 6 người chơi.
 - **Kết quả:** chạy đủ **15/15 câu**, hiện `TỔNG KẾT · 15 CÂU`, bảng chung cuộc đủ 6 người.
-  - Fast P2 vô địch `16.384` điểm (1/15).
+  - Fast P2 vô địch `16.384` gói (1/15).
   - Fast P1 hạng 2, Fast P3 hạng 3, Fast P6 hạng 4 (cùng `16.384`, 1/15).
-  - Fast P4 hạng 5, Fast P5 hạng 6 (`0` điểm).
+  - Fast P4 hạng 5, Fast P5 hạng 6 (`0` gói).
 - **Hiệu năng:** trang chủ từ ~34–42 FPS (production cũ, CPU throttle 4×) lên **~60 FPS** ở bản mới; local dev và mobile cũng ~60 FPS. Chi tiết nguyên nhân và số đo ở [PERFORMANCE-AUDIT.md](./PERFORMANCE-AUDIT.md).
 - Đây là test chức năng nhanh, không phải kiểm tra điểm tối đa; logic chấm điểm/trợ giúp không thay đổi.
 
@@ -83,6 +83,14 @@ Sau khi dùng, cả 4 nút đều có dấu `✕` và không dùng lại đượ
 - **Kiểm tra tự động:** `npm run test:scoring` kiểm tra công thức/rounding; `npm run test:wager` chạy 2 câu thật qua Socket.IO, kiểm tra `WAGER_NOT_AVAILABLE`, `INVALID_WAGER`, `WRONG_QUESTION`, `WAGER_LOCKED`, cộng thưởng, trừ phạt và final.
 - **UI:** panel nằm giữa thưởng câu và 4 trợ giúp; hiện số gói mang theo, đếm ngược tới khóa, disable mức không đủ gói; reveal hiện tách `Thưởng câu` / `Mang thêm` / tổng.
 - **Lưu ý:** câu 1 chưa có gói nên cả 3 mức đều chưa dùng được; từ câu 2 trở đi mới có gói để mang.
+
+## Kiểm tra production sau khi nhập 25 câu
+
+- **Ngày:** 13/11/2026
+- **Deployment:** `dpl_2HdxoMnVWK1NdcX3yaav64Qba5Np`, production `https://ai-la-trieu-phu-ivory.vercel.app`.
+- **Bundle:** `Multiplayer-CQ4RszQr.js` khớp bản build local.
+- **Kết quả:** tạo phòng `E4MH9R` với 1 quản trò + 2 người chơi trên production; câu 1 bốc từ ngân hàng mới (`KHOA HỌC: Công thức hóa học của nước là gì?`), trả lời đúng được `1 gói`; sang câu 2 panel hiện đúng `100%: +1 gói`, bấm chọn nhận `Đang mang 1 gói`; khi còn đúng 3 giây, panel chuyển `Đã khóa`, toàn bộ nút disable.
+- **Ghi chú:** đây là kiểm tra nhanh 2 câu trên production, không thay thế bài test 15 câu/6 người ở trên.
 
 ## Ghi chú
 
