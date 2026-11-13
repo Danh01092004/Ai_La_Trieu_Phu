@@ -17,6 +17,10 @@ import type {
 } from '../../src/types/multiplayer'
 
 const SERVER_URL = process.env.PROD_URL ?? 'http://localhost:3001'
+const IS_LOCAL = /localhost|127\.0\.0\.1/.test(SERVER_URL)
+const SOCKET_PATH =
+  process.env.PROD_SOCKET_PATH ??
+  (IS_LOCAL ? '/socket.io' : '/api/socket-io/socket.io')
 const REQUEST_TIMEOUT_MS = 8_000
 
 async function get(path: string, init: RequestInit = {}): Promise<Response> {
@@ -32,10 +36,12 @@ function contentType(response: Response): string {
 
 function connectSocket(): Promise<Socket> {
   const socket = io(SERVER_URL, {
+    path: SOCKET_PATH,
     transports: ['websocket'],
     reconnection: false,
     forceNew: true,
     timeout: REQUEST_TIMEOUT_MS,
+    ...(IS_LOCAL ? {} : { addTrailingSlash: false }),
   })
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
@@ -107,40 +113,49 @@ async function main(): Promise<void> {
   const missingAsset = await get('/assets/does-not-exist.js')
   assert.equal(missingAsset.status, 404)
   assert.match(contentType(missingAsset), /text\/plain/)
-  assert.equal((await missingAsset.text()).trim(), 'Asset not found')
+  // Express serves its own message locally; Vercel's static layer returns its
+  // generic NOT_FOUND body. Both must be a plain 404, never the SPA shell.
+  assert.match((await missingAsset.text()).trim(), /Asset not found|NOT_FOUND/i)
 
   const missingFile = await get('/old-chunk.js')
   assert.equal(missingFile.status, 404)
   assert.match(contentType(missingFile), /text\/plain/)
 
-  const spa = await get('/multiplayer')
+  // HashRouter keeps the arena at `/#/multiplayer`, so the HTTP SPA entry is `/`.
+  const spa = await get('/')
   assert.equal(spa.status, 200)
   assert.match(contentType(spa), /text\/html/)
   assert.match(await spa.text(), /<div id="root">/)
 
   const index = await get('/index.html')
   assert.equal(index.status, 200)
-  assert.match(index.headers.get('cache-control') ?? '', /no-cache/)
+  assert.match(index.headers.get('cache-control') ?? '', /no-cache|max-age=0/)
 
-  const health = await get('/healthz')
-  assert.equal(health.status, 200)
-  assert.equal(((await health.json()) as { ok?: boolean }).ok, true)
+  // The Express host owns /healthz and /api/leaderboard. On Vercel those are
+  // static/function routing concerns, so only exercise them when testing the
+  // local server directly.
+  const isLocal = /localhost|127\.0\.0\.1/.test(SERVER_URL)
+  if (isLocal) {
+    const health = await get('/healthz')
+    assert.equal(health.status, 200)
+    assert.equal(((await health.json()) as { ok?: boolean }).ok, true)
 
-  const leaderboard = await get('/api/leaderboard?limit=5')
-  assert.equal(leaderboard.status, 200)
-  const board = (await leaderboard.json()) as {
-    ok?: boolean
-    entries?: unknown[]
-    totalMatches?: number
+    const leaderboard = await get('/api/leaderboard?limit=5')
+    assert.equal(leaderboard.status, 200)
+    const board = (await leaderboard.json()) as {
+      ok?: boolean
+      entries?: unknown[]
+      totalMatches?: number
+    }
+    assert.equal(board.ok, true)
+    assert.ok(Array.isArray(board.entries))
+    assert.equal(typeof board.totalMatches, 'number')
+
+    const missingApi = await get('/api/does-not-exist')
+    assert.equal(missingApi.status, 404)
+    assert.match(contentType(missingApi), /application\/json/)
+    assert.equal(((await missingApi.json()) as { ok?: boolean }).ok, false)
   }
-  assert.equal(board.ok, true)
-  assert.ok(Array.isArray(board.entries))
-  assert.equal(typeof board.totalMatches, 'number')
-
-  const missingApi = await get('/api/does-not-exist')
-  assert.equal(missingApi.status, 404)
-  assert.match(contentType(missingApi), /application\/json/)
-  assert.equal(((await missingApi.json()) as { ok?: boolean }).ok, false)
 
   const audio = await get('/xin-vinh-biet-cu.mp3', {
     headers: { Range: 'bytes=0-99' },
