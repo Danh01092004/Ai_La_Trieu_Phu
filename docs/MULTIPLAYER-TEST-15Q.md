@@ -63,6 +63,18 @@ Sau khi dùng, cả 4 nút đều có dấu `✕` và không dùng lại đượ
 - **Trợ giúp:** Player 1 đã dùng `50:50` trong test production bình thường; cả 4 trợ giúp đã được kiểm tra đầy đủ ở test local `ZS4WGT` và temporary `B5WCB4`.
 - **Giới hạn Vercel:** phòng/matches lưu trong RAM của một function instance. 6 tab cùng một trình duyệt đã chạy được, nhưng client ở instance khác có thể không thấy phòng; đây là lý do production phù hợp demo/test, chưa phù hợp lưu lượng thật nếu không có Redis/pub-sub hoặc server realtime riêng.
 
+## Kiểm tra lại sau tối ưu hiệu năng UI
+
+- **Ngày:** 13/11/2026
+- **Môi trường:** Vite `http://localhost:5173`, server Socket.IO `http://localhost:3001`, timing test nhanh `QUESTION_MS=1000`, `REVEAL_MS=600`, `LOSE_MS=600`.
+- **Phòng:** `RPXVCB` — 1 quản trò + 6 người chơi.
+- **Kết quả:** chạy đủ **15/15 câu**, hiện `TỔNG KẾT · 15 CÂU`, bảng chung cuộc đủ 6 người.
+  - Fast P2 vô địch `16.384` điểm (1/15).
+  - Fast P1 hạng 2, Fast P3 hạng 3, Fast P6 hạng 4 (cùng `16.384`, 1/15).
+  - Fast P4 hạng 5, Fast P5 hạng 6 (`0` điểm).
+- **Hiệu năng:** trang chủ từ ~34–42 FPS (production cũ, CPU throttle 4×) lên **~60 FPS** ở bản mới; local dev và mobile cũng ~60 FPS. Chi tiết nguyên nhân và số đo ở [PERFORMANCE-AUDIT.md](./PERFORMANCE-AUDIT.md).
+- Đây là test chức năng nhanh, không phải kiểm tra điểm tối đa; logic chấm điểm/trợ giúp không thay đổi.
+
 ## Ghi chú
 
 - Bộ câu hỏi có 20 câu nhưng mỗi ván chỉ bốc 15 câu, không lặp.

@@ -149,15 +149,14 @@ export function Home() {
           </IconButton>
         </div>
 
-        {/* Floating logo */}
-        <motion.div
-          className="logo-glow w-full"
+        {/* Floating logo. CSS transform animation stays on the compositor;
+            the old Framer Motion loop scheduled a JS frame every tick. */}
+        <div
+          className="logo-glow logo-float w-full"
           style={{ maxWidth: 'min(90vw, 42rem)' }}
-          animate={{ y: [0, -14, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
         >
           <Logo className="h-auto w-full" />
-        </motion.div>
+        </div>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -183,8 +182,7 @@ export function Home() {
           whileTap={{ scale: 0.96 }}
           className="animated-border group relative mt-10 overflow-hidden rounded-full px-10 py-5 sm:px-14"
         >
-          <span className="absolute inset-0 rounded-full bg-gradient-to-r from-gold-500 via-gold-300 to-gold-500 opacity-90 transition-opacity group-hover:opacity-100" />
-          <span className="absolute inset-0 rounded-full bg-gradient-to-r from-gold-500 via-gold-300 to-gold-500 opacity-90 blur-xl" />
+          <span className="absolute inset-0 rounded-full bg-gradient-to-r from-gold-500 via-gold-300 to-gold-500 opacity-90 shadow-[0_0_45px_rgba(245,197,66,0.35)] transition-opacity group-hover:opacity-100" />
           <span className="relative z-10 flex items-center gap-3 font-display font-bold tracking-[0.16em] text-night-900 sm:tracking-[0.2em]" style={{ fontSize: 'clamp(1.25rem, 2.7vw, 1.9rem)' }}>
             <UsersIcon className="h-7 w-7" />
             VÀO ĐẤU TRƯỜNG

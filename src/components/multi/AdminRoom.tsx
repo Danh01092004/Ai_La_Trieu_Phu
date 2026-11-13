@@ -158,7 +158,9 @@ export function AdminRoom({
     const update = () =>
       setRemainingMs(Math.max(0, (state.endsAt ?? 0) - (Date.now() + offset)))
     update()
-    const timer = window.setInterval(update, 250)
+    // The dashboard only shows whole seconds; 500ms halves React commits
+    // compared with the old 250ms tick without a visible difference.
+    const timer = window.setInterval(update, 500)
     return () => window.clearInterval(timer)
   }, [state?.endsAt, state?.serverNow])
 

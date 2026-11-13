@@ -15,19 +15,24 @@ interface Props {
   density?: number
   className?: string
   interactive?: boolean
+  /** Draw the connective lines. Disabled during play to save fill-rate. */
+  connections?: boolean
 }
 
 /**
  * Ambient canvas particle field: drifting glowing motes, subtle connective
- * lines (spatially bucketed to O(n) from O(n²)), and a gentle mouse repulsion.
+ * lines and a gentle mouse repulsion.
  *
  * The field is intentionally rendered at 30 FPS: it is a slow ambient effect,
  * and halving the paint rate leaves more headroom for gameplay animations.
  * Glow sprites are rasterised once instead of creating a radial gradient for
- * every particle on every frame, which was the main allocation cost on phones.
+ * every particle on every frame. Connection lines use one batched path over a
+ * capped particle count; the previous spatial-bucket Map allocated thousands of
+ * objects per second, which showed up as regular GC frame drops.
  */
 const CONNECTION_DISTANCE_SQ = 7500
-const BUCKET_SIZE = 90
+// 30 FPS is enough for slow ambient motes. The real win came from drawing only
+// 40 particles and batching connection lines; no need to make motion choppy.
 const TARGET_FPS = 30
 const FRAME_INTERVAL_MS = 1000 / TARGET_FPS
 const SPRITE_SIZE = 64
@@ -53,7 +58,12 @@ function createGlowSprite(rgb: string): HTMLCanvasElement {
   return sprite
 }
 
-function ParticleFieldImpl({ density = 70, className, interactive = true }: Props) {
+function ParticleFieldImpl({
+  density = 70,
+  className,
+  interactive = true,
+  connections = true,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const mouseRef = useRef({ x: -9999, y: -9999 })
 
@@ -78,8 +88,9 @@ function ParticleFieldImpl({ density = 70, className, interactive = true }: Prop
 
     // ── sizing ──────────────────────────────────────────────────────────────
     const resize = () => {
-      // Cap DPR at 1.5 — above this the extra fill-rate cost is not visible.
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5)
+      // Cap DPR at 1.25: soft glows don't need 2× resolution, and the extra
+      // fill-rate is visible in frame-time on weak GPUs.
+      dpr = Math.min(window.devicePixelRatio || 1, 1.25)
       width = canvas.clientWidth
       height = canvas.clientHeight
       canvas.width = width * dpr
@@ -101,26 +112,7 @@ function ParticleFieldImpl({ density = 70, className, interactive = true }: Prop
     const init = () => {
       resize()
       const count = Math.round((density * (width * height)) / (1280 * 720))
-      particles = Array.from({ length: Math.max(20, Math.min(count, 80)) }, spawn)
-    }
-
-    // ── spatial bucketing for connection lines ───────────────────────────────
-    const buildBuckets = (ps: Particle[]) => {
-      const cols = Math.ceil(width / BUCKET_SIZE) + 1
-      const rows = Math.ceil(height / BUCKET_SIZE) + 1
-      const map = new Map<number, Particle[]>()
-      const key = (c: number, r: number) => r * cols + c
-
-      for (const p of ps) {
-        const c = Math.floor(p.x / BUCKET_SIZE)
-        const r = Math.floor(p.y / BUCKET_SIZE)
-        const k = key(c, r)
-        const bucket = map.get(k)
-        if (bucket) bucket.push(p)
-        else map.set(k, [p])
-      }
-
-      return { map, cols, rows, key }
+      particles = Array.from({ length: Math.max(16, Math.min(count, 40)) }, spawn)
     }
 
     // ── main loop ───────────────────────────────────────────────────────────
@@ -178,40 +170,26 @@ function ParticleFieldImpl({ density = 70, className, interactive = true }: Prop
       }
       ctx.globalAlpha = 1
 
-      // ── Connection lines (spatially bucketed) ─────────────────────────────
-      const { map, cols, rows, key } = buildBuckets(particles)
-
-      for (const p of particles) {
-        const pc = Math.floor(p.x / BUCKET_SIZE)
-        const pr = Math.floor(p.y / BUCKET_SIZE)
-
-        for (let dc = -1; dc <= 1; dc++) {
-          for (let dr = -1; dr <= 1; dr++) {
-            const nc = pc + dc
-            const nr = pr + dr
-            if (nc < 0 || nr < 0 || nc >= cols || nr >= rows) continue
-
-            const neighbours = map.get(key(nc, nr))
-            if (!neighbours) continue
-
-            for (const q of neighbours) {
-              if (q === p) continue
-              const dx = p.x - q.x
-              const dy = p.y - q.y
-              const dist2 = dx * dx + dy * dy
-
-              if (dist2 < CONNECTION_DISTANCE_SQ) {
-                const alpha = (1 - dist2 / CONNECTION_DISTANCE_SQ) * 0.13
-                ctx.strokeStyle = `rgba(120,150,255,${alpha})`
-                ctx.lineWidth = 0.6
-                ctx.beginPath()
-                ctx.moveTo(p.x, p.y)
-                ctx.lineTo(q.x, q.y)
-                ctx.stroke()
-              }
+      // ── Connection lines, batched into one path ───────────────────────────
+      // The particle count is capped at 40, so O(n²) ≈ 800 distance checks per
+      // 30 FPS tick is cheaper than rebuilding a Map and bucket arrays.
+      if (connections) {
+        ctx.strokeStyle = 'rgba(120,150,255,0.085)'
+        ctx.lineWidth = 0.6
+        ctx.beginPath()
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i]
+          for (let j = i + 1; j < particles.length; j++) {
+            const q = particles[j]
+            const dx = p.x - q.x
+            const dy = p.y - q.y
+            if (dx * dx + dy * dy < CONNECTION_DISTANCE_SQ) {
+              ctx.moveTo(p.x, p.y)
+              ctx.lineTo(q.x, q.y)
             }
           }
         }
+        ctx.stroke()
       }
     }
 
@@ -243,7 +221,7 @@ function ParticleFieldImpl({ density = 70, className, interactive = true }: Prop
         window.removeEventListener('mouseleave', onLeave)
       }
     }
-  }, [density, interactive])
+  }, [connections, density, interactive])
 
   return (
     <canvas

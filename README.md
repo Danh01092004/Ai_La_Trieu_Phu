@@ -70,6 +70,10 @@ Repo có sẵn adapter WebSocket cho Vercel tại `api/socket-io/[...path].ts`. 
 
 **Giới hạn quan trọng:** phòng đấu nằm trong RAM của một function instance. Vercel không bảo đảm mọi WebSocket của các tab vào cùng một instance, và instance có thể bị thu hồi/restart; khi đó lobby/BXH có thể lệch hoặc mất phòng. Trong test production, 6 tab cùng một trình duyệt vào được cùng phòng, nhưng 7 socket client độc lập có lần bị chia instance và báo “Không tìm thấy phòng”. Vercel cũng không giữ file `data/results.json` giữa các instance (adapter production dùng `/tmp/altp-results.json`). Vì vậy adapter phù hợp demo/nhóm nhỏ, chưa thay thế server Socket.IO thường trực cho 40 người. Muốn chạy ổn định nhiều instance cần Redis/pub-sub + lưu kết quả bền.
 
+## Hiệu năng UI
+
+Trang chủ và màn chơi dùng hiệu ứng nền tĩnh/compositor thay vì các lớp blur + blend quay vô hạn. Trên Chromium throttle CPU 4×, trang chủ từ ~34–42 FPS tăng lên **~60 FPS**; mobile 390×844 và màn kết thúc cũng giữ ~58–60 FPS. Chi tiết nguyên nhân, số đo trước/sau và các file đã sửa nằm trong [docs/PERFORMANCE-AUDIT.md](docs/PERFORMANCE-AUDIT.md).
+
 ## Test
 
 ```powershell
