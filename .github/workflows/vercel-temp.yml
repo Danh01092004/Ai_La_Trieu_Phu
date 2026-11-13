@@ -32,8 +32,8 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          npx --yes vercel deploy --temporary --yes --json | tee deployment.json
-          URL=$(grep -oE 'https://[^"[:space:]]+\.vercel\.app' deployment.json | head -n 1)
+          npx --yes vercel deploy --temporary --yes --logs 2>&1 | tee deploy.log
+          URL=$(grep -oE 'https://[^"[:space:]]+\.vercel\.app' deploy.log | tail -n 1)
           if [ -z "$URL" ]; then
             echo "No deployment URL found in Vercel output" >&2
             exit 1
@@ -57,7 +57,7 @@ jobs:
             TARGET="$DEPLOY_URL"
           else
             STATE=failure
-            DESCRIPTION="Temporary Vercel deployment failed; see workflow log"
+            DESCRIPTION="Temporary Vercel deployment failed; see commit comment"
             TARGET="$RUN_URL"
           fi
 
@@ -74,3 +74,17 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             "repos/${{ github.repository }}/statuses/$SHA" \
             --input status.json
+
+          if [ "$STATE" = "failure" ]; then
+            if [ -s deploy.log ]; then
+              BODY=$(tail -c 55000 deploy.log)
+            else
+              BODY="The Vercel temporary deployment failed before writing a log."
+            fi
+            jq -n --arg body "$BODY" '{body: $body}' > comment.json
+            gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${{ github.repository }}/commits/$SHA/comments" \
+              --input comment.json || true
+          fi
