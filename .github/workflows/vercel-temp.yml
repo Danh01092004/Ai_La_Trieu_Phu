@@ -1,0 +1,76 @@
+name: Vercel Temporary Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - vercel-websocket-preview
+
+permissions:
+  contents: write
+  statuses: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy temporary deployment
+        id: deploy
+        shell: bash
+        run: |
+          set -o pipefail
+          npx --yes vercel deploy --temporary --yes --json | tee deployment.json
+          URL=$(grep -oE 'https://[^"[:space:]]+\.vercel\.app' deployment.json | head -n 1)
+          if [ -z "$URL" ]; then
+            echo "No deployment URL found in Vercel output" >&2
+            exit 1
+          fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Deployment URL: $URL"
+
+      - name: Report deployment status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+          DEPLOY_OUTCOME: ${{ steps.deploy.outcome }}
+          DEPLOY_URL: ${{ steps.deploy.outputs.url }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          if [ "$DEPLOY_OUTCOME" = "success" ] && [ -n "$DEPLOY_URL" ]; then
+            STATE=success
+            DESCRIPTION="Temporary Vercel deployment is public"
+            TARGET="$DEPLOY_URL"
+          else
+            STATE=failure
+            DESCRIPTION="Temporary Vercel deployment failed; see workflow log"
+            TARGET="$RUN_URL"
+          fi
+
+          jq -n \
+            --arg state "$STATE" \
+            --arg context "vercel-temp" \
+            --arg description "$DESCRIPTION" \
+            --arg target_url "$TARGET" \
+            '{state: $state, context: $context, description: $description, target_url: $target_url}' \
+            > status.json
+
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${{ github.repository }}/statuses/$SHA" \
+            --input status.json
