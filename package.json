@@ -23,7 +23,6 @@
     "test:results": "tsx server/scripts/resultsSmoke.ts",
     "test:resume": "tsx server/scripts/resumeSmoke.ts",
     "test:latency": "tsx server/scripts/latencySmoke.ts",
-    "test:vercel": "tsx server/scripts/vercelAdapterSmoke.ts",
     "typecheck:server": "tsc -p tsconfig.server.json --noEmit",
     "build": "tsc -b && tsc -p tsconfig.server.json --noEmit && vite build",
     "preview": "vite preview",
