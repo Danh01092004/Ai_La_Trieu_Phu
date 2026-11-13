@@ -1,5 +1,5 @@
 .agents/
 .playwright-mcp/
 node_modules/
-data/
+/data/
 docs/screenshots/
