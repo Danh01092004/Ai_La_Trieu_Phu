@@ -46,7 +46,7 @@ Sau khi dùng, cả 4 nút đều có dấu `✕` và không dùng lại đượ
 - **Phòng:** `B5WCB4`; đủ 6/6 người, chạy hết 15 câu và hiện bảng chung cuộc.
 - **Kết quả:** Player 1 hạng 1 `2.307` điểm (4/15), Player 2–6 `2.305` điểm; Player 1 đã dùng cả 4 trợ giúp.
 - **Lưu ý:** lần test này trình duyệt tự động chọn đáp án A để chạy nhanh qua 15 câu, nên điểm thấp; mục tiêu là kiểm tra transport WebSocket, lobby 6 người, trợ giúp và final trên Vercel, không phải kiểm tra điểm tối đa.
-- Adapter Vercel rút reveal còn **2,5 giây** khi `VERCEL=1` để ván 15 câu vừa giới hạn 300 giây của Hobby.
+- Adapter Vercel rút reveal còn **2,5 giây** khi `VERCEL=1`; test chạy hết 15 câu trên temporary deployment. Project Vercel hiện từ chối `maxDuration` >60 giây, nên `vercel.json` không đặt giới hạn này và độ bền ván dài vẫn phụ thuộc plan/instance.
 
 ## Ghi chú
 
