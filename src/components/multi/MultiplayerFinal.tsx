@@ -106,7 +106,7 @@ export function MultiplayerFinal({
             </h2>
             <p className="mt-1 text-sm text-white/55">
               {champion
-                ? `${champion.score.toLocaleString('vi-VN')} điểm · ${champion.correct}/${final.total} câu đúng`
+                ? `${champion.score.toLocaleString('vi-VN')} gói · ${champion.correct}/${final.total} câu đúng`
                 : 'Không có dữ liệu xếp hạng'}
             </p>
 
@@ -125,7 +125,7 @@ export function MultiplayerFinal({
                 </p>
               </div>
               <div>
-                <p className="font-display text-[9px] uppercase tracking-[0.16em] text-white/40">Điểm</p>
+                <p className="font-display text-[9px] uppercase tracking-[0.16em] text-white/40">Gói hàng</p>
                 <p className="font-display text-xl font-bold tabular-nums text-gold-200">
                   {final.you.score.toLocaleString('vi-VN')}
                 </p>

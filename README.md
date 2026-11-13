@@ -1,6 +1,6 @@
 # AI LÀ TRIỆU PHÚ — Multiplayer 40 người
 
-Game trắc nghiệm realtime: một phòng tối đa **40 người chơi + 1 quản trò**, mã **6 ký tự**, **15 câu × 15 giây**, điểm nhân đôi mỗi câu, 4 trợ giúp, page gà riêng, bảng xếp hạng sau từng câu/final và **BXH all-time lưu bền trên server**.
+Game trắc nghiệm realtime: một phòng tối đa **40 người chơi + 1 quản trò**, mã **6 ký tự**, ngân hàng **25 câu**, mỗi ván bốc ngẫu nhiên **15 câu × 15 giây**, thưởng câu nhân đôi, **mang thêm gói hàng 10%/25%/100%** (khóa ở 3 giây cuối), 4 trợ giúp, page gà riêng, bảng xếp hạng sau từng câu/final và **BXH all-time lưu bền trên server**.
 
 Người tạo phòng là **quản trò**, không chơi: chỉ theo dõi BXH/hạng/trạng thái trực tiếp, bắt đầu/chơi lại, mời người chơi ra hoặc chặn/bỏ chặn.
 
@@ -17,7 +17,7 @@ Mở **http://localhost:5173**. Server Socket.IO chạy cùng lúc ở **http://
 - Người chơi: mở link hoặc nhập mã 6 ký tự → **VÀO PHÒNG**.
 - Quản trò bấm **BẮT ĐẦU** khi có ít nhất 2 người chơi đang kết nối.
 - Trong phòng, quản trò có thể **mời ra** (vào lại được khi phòng về lobby) hoặc **chặn** theo tên/trình duyệt cho đến khi bỏ chặn.
-- F5 hoặc mất mạng: tab tự khôi phục đúng phòng/câu/điểm/trợ giúp trong **60 giây** (token nằm trong `sessionStorage`, mỗi tab một phiên). Quản trò hết grace thì phòng đóng.
+- F5 hoặc mất mạng: tab tự khôi phục đúng phòng/câu/gói hàng/trợ giúp trong **60 giây** (token nằm trong `sessionStorage`, mỗi tab một phiên). Quản trò hết grace thì phòng đóng.
 - Sai/hết giờ: page gà nhanh **3 giây** rồi về reveal; nhạc lose tiếp tục dưới reveal và kết thúc trước câu tiếp.
 - Hết 15 câu: hạng **1–5** vào màn tổng kết ăn mừng; hạng **>5** vẫn page gà + nhạc lose đầy đủ rồi mới xem BXH.
 - **BXH** ở Home mở bảng xếp hạng mọi thời đại.
@@ -81,7 +81,8 @@ npm run lint          # typecheck client + server
 npm run build         # typecheck + Vite build
 
 npm run test:rooms    # phòng, 40 người chơi + quản trò, cap 40, mã
-npm run test:scoring  # 15 nấc điểm + mọi tie-break xếp hạng (không cần server)
+npm run test:questions # JSON, 25 câu, 4 đáp án, id, difficulty, rút ngẫu nhiên
+npm run test:scoring  # 15 nấc thưởng + công thức mang thêm + tie-break (không cần server)
 npm run test:lifelines # 50:50, gọi điện luôn sai, khán giả, MC
 npm run test:server   # health + handshake + scoring
 npm run test:vercel   # adapter WebSocket Vercel: handshake, tạo/vào phòng, state chung
@@ -89,6 +90,7 @@ npm run test:prod     # production: static/hashed assets, SPA, 404, API, audio, 
 npm run test:results  # ghi JSON, best-per-name, đọc lại file
 npm run test:game     # 15 câu, cần server fast mode bên dưới
 npm run test:flow     # scoring/reveal/4 trợ giúp/final/rematch + API all-time
+npm run test:wager    # 100% mang thêm, khóa 3 giây, thưởng/phạt, final
 npm run test:load     # 1 quản trò + 40 người chơi, p95 broadcast <300ms, chặn người thứ 41
 npm run test:admin    # kick/rejoin, block theo tên/clientId, unblock, quyền quản trò
 npm run test:resume   # resume admin/player, grace, đóng phòng khi quản trò rời/hết grace
@@ -113,6 +115,13 @@ $env:QUESTION_COUNT='15'; $env:QUESTION_MS='300'; $env:REVEAL_MS='300'; $env:LOS
 ```
 
 `test:load` mặc định chạy 3 câu; muốn load đủ 15 câu thì dùng cùng env `QUESTION_COUNT=15` cho cả server và test. Test đo p95 broadcast từ `serverNow` đến lúc client nhận, đồng thời kiểm tra dashboard quản trò 40 người và người chơi thứ 41 bị `ROOM_FULL`.
+
+`test:wager` cần `QUESTION_COUNT=2`, `QUESTION_MS=2000`, `REVEAL_MS=300`, `WAGER_LOCK_MS=400`:
+
+```powershell
+$env:QUESTION_COUNT='2'; $env:QUESTION_MS='2000'; $env:REVEAL_MS='300'; $env:WAGER_LOCK_MS='400'; npm run server
+$env:QUESTION_COUNT='2'; $env:QUESTION_MS='2000'; $env:REVEAL_MS='300'; $env:WAGER_LOCK_MS='400'; npm run test:wager
+```
 
 `test:admin` cần `QUESTION_COUNT=3`, `QUESTION_MS=1500`, `REVEAL_MS=300`, `LOSE_MS=300`. `test:resume` cần server:
 ```powershell

@@ -134,10 +134,27 @@ export function MultiplayerReveal({
                 reveal.yourCorrect ? 'text-emerald-200' : 'text-red-200',
               )}
             >
-              +{reveal.yourDelta.toLocaleString('vi-VN')} điểm
+              {reveal.yourDelta > 0 ? '+' : ''}
+              {reveal.yourDelta.toLocaleString('vi-VN')} gói
+            </p>
+            {reveal.yourWagerPercent > 0 && (
+              <p className="mt-1 inline-flex rounded-full border border-amber-300/25 bg-amber-400/10 px-2 py-0.5 font-display text-[9px] uppercase tracking-[0.12em] text-amber-200/85">
+                Mang thêm {reveal.yourWagerPercent}% · {reveal.yourWagerAmount.toLocaleString('vi-VN')} gói
+              </p>
+            )}
+            <p className="mt-1 text-[11px] leading-relaxed text-white/55">
+              {reveal.yourCorrect
+                ? `Thưởng câu +${reveal.yourBaseDelta.toLocaleString('vi-VN')}${
+                    reveal.yourWagerAmount > 0
+                      ? ` · Mang thêm +${reveal.yourWagerDelta.toLocaleString('vi-VN')}`
+                      : ''
+                  }`
+                : reveal.yourWagerAmount > 0
+                  ? `Mất ${Math.abs(reveal.yourWagerDelta).toLocaleString('vi-VN')} gói mang thêm · không nhận thưởng câu`
+                  : 'Không nhận thưởng câu · không mang thêm'}
             </p>
             <p className="mt-0.5 text-[11px] text-white/55">
-              Tổng {reveal.yourScore.toLocaleString('vi-VN')} điểm · Hạng{' '}
+              Tổng {reveal.yourScore.toLocaleString('vi-VN')} gói · Hạng{' '}
               {reveal.yourRank}/{reveal.totalPlayers} · {reveal.yourCorrectCount} câu đúng
             </p>
           </motion.section>

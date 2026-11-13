@@ -290,7 +290,7 @@ export function AdminRoom({
                   <span className="font-display font-bold text-gold-100">
                     {champion.name}
                   </span>{' '}
-                  · {champion.score.toLocaleString('vi-VN')} điểm
+                  · {champion.score.toLocaleString('vi-VN')} gói
                 </p>
               ) : (
                 <div className="mt-3 grid grid-cols-3 gap-2 text-center">
@@ -435,7 +435,7 @@ export function AdminRoom({
               {state?.phase === 'final' && (
                 <>
                   <p className="text-[11px] leading-relaxed text-white/55">
-                    Mở ván mới với cùng phòng và người chơi. Điểm và trợ giúp sẽ được đặt lại.
+                    Mở ván mới với cùng phòng và người chơi. Gói hàng và trợ giúp sẽ được đặt lại.
                   </p>
                   <ActionButton
                     className="mt-3"
@@ -602,7 +602,7 @@ export function AdminRoom({
                           {player.score.toLocaleString('vi-VN')}
                         </p>
                         <p className="text-[8px] uppercase tracking-[0.12em] text-white/35">
-                          điểm
+                          gói
                         </p>
                       </div>
 

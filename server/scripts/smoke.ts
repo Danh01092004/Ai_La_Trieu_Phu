@@ -8,6 +8,7 @@ import assert from 'node:assert/strict'
 import { io, type Socket } from 'socket.io-client'
 import { SERVICE_NAME } from '../config'
 import {
+  BASE_MAX_POINTS,
   MAX_POINTS,
   QUESTION_TIME_MS,
   TOTAL_QUESTIONS,
@@ -49,7 +50,8 @@ function assertScoring(): void {
   assert.equal(pointsForLevel(2), 2)
   assert.equal(pointsForLevel(3), 4)
   assert.equal(pointsForLevel(15), 16_384)
-  assert.equal(MAX_POINTS, 32_767)
+  assert.equal(BASE_MAX_POINTS, 32_767)
+  assert.equal(MAX_POINTS, 245_760)
   assert.throws(() => pointsForLevel(0), RangeError)
   assert.throws(() => pointsForLevel(16), RangeError)
   assert.throws(() => pointsForLevel(1.5), RangeError)

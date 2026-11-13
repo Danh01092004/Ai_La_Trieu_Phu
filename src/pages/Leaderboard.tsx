@@ -100,7 +100,7 @@ export function Leaderboard() {
                 BXH MỌI THỜI ĐẠI
               </h1>
               <p className="mx-auto mt-2 max-w-xl text-xs leading-relaxed text-white/55 sm:text-sm">
-                Điểm cao nhất của mỗi tên trong các ván đã hoàn thành. Dữ liệu được lưu trên máy chủ.
+                Số gói hàng cao nhất của mỗi tên trong các ván đã hoàn thành. Dữ liệu được lưu trên máy chủ.
               </p>
             </motion.div>
 

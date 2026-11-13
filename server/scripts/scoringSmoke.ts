@@ -4,9 +4,11 @@
  */
 import assert from 'node:assert/strict'
 import {
+  BASE_MAX_POINTS,
   MAX_POINTS,
   TOTAL_QUESTIONS,
   pointsForLevel,
+  wagerForScore,
 } from '../../src/config/multiplayerConfig'
 import { buildLeaderboard, compareRoomPlayers } from '../ranking'
 import type { RoomPlayer } from '../rooms'
@@ -48,10 +50,23 @@ function testPointsLadder(): void {
   assert.equal(pointsForLevel(1), 1)
   assert.equal(pointsForLevel(15), 16_384)
   assert.equal(cumulative, 32_767)
-  assert.equal(cumulative, MAX_POINTS)
+  assert.equal(cumulative, BASE_MAX_POINTS)
+  assert.equal(MAX_POINTS, 245_760)
   assert.throws(() => pointsForLevel(0), RangeError)
   assert.throws(() => pointsForLevel(16), RangeError)
   assert.throws(() => pointsForLevel(1.5), RangeError)
+}
+
+function testWagerMath(): void {
+  assert.equal(wagerForScore(0, 100), 0)
+  assert.equal(wagerForScore(1, 10), 0)
+  assert.equal(wagerForScore(1, 100), 1)
+  assert.equal(wagerForScore(99, 10), 9)
+  assert.equal(wagerForScore(100, 25), 25)
+  assert.equal(wagerForScore(100, 100), 100)
+  assert.throws(() => wagerForScore(-1, 10), RangeError)
+  assert.throws(() => wagerForScore(10, 50), RangeError)
+  assert.throws(() => wagerForScore(10, 3), RangeError)
 }
 
 function testRankingTieBreaks(): void {
@@ -136,6 +151,7 @@ function testStrictRanks(): void {
 }
 
 testPointsLadder()
+testWagerMath()
 testRankingTieBreaks()
 testStrictRanks()
 console.log(

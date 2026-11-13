@@ -14,8 +14,21 @@ export const MIN_PLAYERS_TO_START = 2
 /** Number of questions in one multiplayer match. */
 export const TOTAL_QUESTIONS = 15
 
+/** The curated bank must stay at least this large; 15 are drawn per match. */
+export const MIN_QUESTION_BANK = 25
+
 /** How long each question stays open. */
 export const QUESTION_TIME_MS = 15_000
+
+/**
+ * Wagers are locked shortly before the question closes. The player can keep
+ * changing the selected percentage until this window, then the panel is
+ * disabled and the server rejects late packets.
+ */
+export const WAGER_LOCK_MS = 3_000
+
+/** Available "mang thêm" percentages. 0 means no extra packages. */
+export const WAGER_PERCENTS = [10, 25, 100] as const
 
 /** Full-screen final-loser chicken page; the lose track is ~6.1s. */
 export const LOSE_PAGE_MS = 6_500
@@ -36,8 +49,14 @@ export const ROOM_CODE_LENGTH = 6
 /** Ambiguous characters (O/0, I/1) are intentionally excluded. */
 export const ROOM_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
 
-/** Maximum score when every question is answered correctly. */
-export const MAX_POINTS = (2 ** TOTAL_QUESTIONS) - 1
+/** Maximum score without the optional wager. */
+export const BASE_MAX_POINTS = (2 ** TOTAL_QUESTIONS) - 1
+
+/**
+ * Maximum score when every answer is correct and every question uses the
+ * 100% wager. With S(n) = 2*S(n-1) + 2^(n-1), S(n) = n * 2^(n-1).
+ */
+export const MAX_POINTS = TOTAL_QUESTIONS * 2 ** (TOTAL_QUESTIONS - 1)
 
 /**
  * Points awarded for a correct answer at a 1-based question level.
@@ -51,4 +70,21 @@ export function pointsForLevel(level: number): number {
   }
 
   return 2 ** (level - 1)
+}
+
+/** The amount of packages carried at a given percentage, rounded down. */
+export function wagerForScore(score: number, percent: number): number {
+  if (!Number.isInteger(score) || score < 0) {
+    throw new RangeError('Score must be a non-negative integer')
+  }
+  if (
+    !Number.isInteger(percent) ||
+    percent < 0 ||
+    percent > 100 ||
+    (percent !== 0 && !(WAGER_PERCENTS as readonly number[]).includes(percent))
+  ) {
+    throw new RangeError(`Wager percent must be 0 or one of ${WAGER_PERCENTS.join(', ')}`)
+  }
+
+  return Math.floor((score * percent) / 100)
 }

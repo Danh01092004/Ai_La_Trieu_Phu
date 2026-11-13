@@ -3,6 +3,7 @@ import {
   LOSE_PAGE_MS,
   QUESTION_TIME_MS,
   TOTAL_QUESTIONS,
+  WAGER_LOCK_MS as DEFAULT_WAGER_LOCK_MS,
 } from '../src/config/multiplayerConfig.js'
 
 /**
@@ -61,6 +62,17 @@ export const QUESTION_DURATION_MS = readBoundedInt(
 
 /** Small network allowance for answers already in flight at the deadline. */
 export const ANSWER_GRACE_MS = 250
+
+/**
+ * Wager lock window before the question deadline. Overridable so fast
+ * integration tests can still exercise the wager endpoint with short rounds.
+ */
+export const WAGER_LOCK_MS = readBoundedInt(
+  process.env.WAGER_LOCK_MS,
+  0,
+  MAX_QUESTION_MS,
+  DEFAULT_WAGER_LOCK_MS,
+)
 
 /**
  * How long the answer reveal (correct answer, distribution, leaderboard) stays

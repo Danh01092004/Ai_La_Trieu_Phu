@@ -1,262 +1,327 @@
 [
   {
     "id": 1,
-    "question": "Chương 5 trình bày tư tưởng Hồ Chí Minh về những vấn đề gì?",
+    "question": "ĐẠI HỘI II: Đại hội đại biểu toàn quốc lần thứ II diễn ra vào năm nào?",
     "answers": [
-      "Đại đoàn kết toàn dân tộc và đoàn kết quốc tế",
-      "Xây dựng Đảng và Nhà nước",
-      "Đạo đức cách mạng",
-      "Chủ nghĩa xã hội và con đường đi lên chủ nghĩa xã hội"
+      "1945",
+      "1946",
+      "1951",
+      "1954"
     ],
-    "correct": 0,
-    "difficulty": "easy",
-    "explanation": "Chương 5 tập trung trình bày tư tưởng Hồ Chí Minh về đại đoàn kết toàn dân tộc và đoàn kết quốc tế, hai nội dung quan trọng trong tư tưởng của Người về tập hợp và phát huy sức mạnh cách mạng."
+    "correct": 2,
+    "difficulty": "medium",
+    "explanation": "Đại hội đại biểu toàn quốc lần thứ II họp tháng 2/1951 tại Chiêm Hóa, Tuyên Quang."
   },
   {
     "id": 2,
-    "question": "Theo Hồ Chí Minh, đại đoàn kết toàn dân tộc có ý nghĩa như thế nào đối với cách mạng?",
+    "question": "ĐẠI HỘI II: Đại hội II được tổ chức tại tỉnh nào?",
     "answers": [
-      "Chỉ là một biện pháp tạm thời trong giai đoạn kháng chiến",
-      "Có ý nghĩa chiến lược, quyết định thành công của cách mạng",
-      "Là vấn đề thứ yếu so với xây dựng lực lượng vũ trang",
-      "Chỉ áp dụng trong nội bộ Đảng"
+      "Cao Bằng",
+      "Tuyên Quang",
+      "Thái Nguyên",
+      "Bắc Kạn"
     ],
     "correct": 1,
-    "difficulty": "easy",
-    "explanation": "Hồ Chí Minh coi đại đoàn kết toàn dân tộc là vấn đề có ý nghĩa chiến lược, cơ bản, nhất quán và xuyên suốt tiến trình cách mạng, quyết định thành công của cách mạng."
+    "difficulty": "medium",
+    "explanation": "Đại hội II họp tại huyện Chiêm Hóa, tỉnh Tuyên Quang."
   },
   {
     "id": 3,
-    "question": "Hồ Chí Minh dùng khái niệm nào để chỉ 'mọi con dân nước Việt', không phân biệt dân tộc, tôn giáo, già trẻ, giàu nghèo?",
+    "question": "ĐẠI HỘI II: Tên công khai của Đảng tại Việt Nam sau Đại hội II là gì?",
     "answers": [
-      "\"Quần chúng cách mạng\"",
-      "\"Đồng bào chiến sĩ\"",
-      "\"Dân\" và \"Nhân dân\"",
-      "\"Công dân yêu nước\""
+      "Đảng Cộng sản Việt Nam",
+      "Đảng Lao động Việt Nam",
+      "Đảng Dân chủ Việt Nam",
+      "Đảng Nhân dân Việt Nam"
     ],
-    "correct": 2,
-    "difficulty": "easy",
-    "explanation": "Hồ Chí Minh sử dụng các khái niệm 'dân' và 'nhân dân' với nội hàm rộng, bao gồm mọi con dân nước Việt không phân biệt dân tộc, tôn giáo, giàu nghèo, già trẻ."
+    "correct": 1,
+    "difficulty": "medium",
+    "explanation": "Đảng ra hoạt động công khai với tên Đảng Lao động Việt Nam."
   },
   {
     "id": 4,
-    "question": "Lực lượng nòng cốt của khối đại đoàn kết toàn dân tộc là những ai?",
+    "question": "ĐẠI HỘI II: Ai soạn thảo Chính cương Đảng Lao động Việt Nam?",
     "answers": [
-      "Trí thức và văn nghệ sĩ",
-      "Công nhân, nông dân (liên minh công - nông - trí thức)",
-      "Thương nhân và doanh nhân",
-      "Quân đội và công an"
+      "Hồ Chí Minh",
+      "Võ Nguyên Giáp",
+      "Trường Chinh",
+      "Phạm Văn Đồng"
     ],
-    "correct": 1,
-    "difficulty": "easy",
-    "explanation": "Theo tư tưởng Hồ Chí Minh, nền tảng của khối đại đoàn kết toàn dân tộc là liên minh công nhân - nông dân - trí thức, trong đó liên minh công - nông là nền tảng."
+    "correct": 2,
+    "difficulty": "medium",
+    "explanation": "Trường Chinh trình bày và soạn thảo Chính cương của Đảng Lao động Việt Nam."
   },
   {
     "id": 5,
-    "question": "Hình thức tổ chức của khối đại đoàn kết toàn dân tộc được gọi là gì?",
+    "question": "ĐẠI HỘI II: Ai được bầu làm Tổng Bí thư tại Đại hội II?",
     "answers": [
-      "Hội đồng nhân dân các cấp",
-      "Ủy ban Trung ương Đảng",
-      "Mặt trận dân tộc thống nhất",
-      "Quốc hội"
+      "Trường Chinh",
+      "Võ Nguyên Giáp",
+      "Lê Duẩn",
+      "Nguyễn Chí Thanh"
     ],
-    "correct": 2,
-    "difficulty": "easy",
-    "explanation": "Mặt trận dân tộc thống nhất là hình thức tổ chức của khối đại đoàn kết toàn dân tộc, nơi tập hợp các giai cấp, tầng lớp, dân tộc, tôn giáo và lực lượng yêu nước."
+    "correct": 0,
+    "difficulty": "medium",
+    "explanation": "Đại hội bầu Trường Chinh làm Tổng Bí thư."
   },
   {
     "id": 6,
-    "question": "Mặt trận dân tộc thống nhất phải hoạt động theo nguyên tắc nào?",
+    "question": "ĐẠI HỘI II: Ai được bầu làm Chủ tịch Đảng?",
     "answers": [
-      "Nguyên tắc tập trung dân chủ",
-      "Nguyên tắc hiệp thương dân chủ",
-      "Nguyên tắc đa số quyết định",
-      "Nguyên tắc lãnh đạo tập thể, cá nhân phụ trách"
+      "Trường Chinh",
+      "Hồ Chí Minh",
+      "Phạm Văn Đồng",
+      "Võ Nguyên Giáp"
     ],
     "correct": 1,
-    "difficulty": "easy",
-    "explanation": "Mặt trận dân tộc thống nhất hoạt động theo nguyên tắc hiệp thương dân chủ, nhằm phát huy sự thống nhất trong đa dạng và tôn trọng lợi ích chính đáng của các thành viên."
+    "difficulty": "medium",
+    "explanation": "Hồ Chí Minh được bầu làm Chủ tịch Đảng."
   },
   {
     "id": 7,
-    "question": "Theo Hồ Chí Minh, cách mạng Việt Nam là một bộ phận của cái gì?",
+    "question": "ĐẠI HỘI II: Đảng quyết định thành lập bao nhiêu đảng riêng ở Đông Dương?",
     "answers": [
-      "Phong trào không liên kết",
-      "Cách mạng thế giới",
-      "Hệ thống các nước xã hội chủ nghĩa",
-      "Phong trào giải phóng dân tộc châu Á"
+      "2",
+      "3",
+      "4",
+      "5"
     ],
     "correct": 1,
-    "difficulty": "easy",
-    "explanation": "Hồ Chí Minh khẳng định cách mạng Việt Nam là một bộ phận của cách mạng thế giới, vì vậy cách mạng Việt Nam cần gắn sức mạnh dân tộc với sức mạnh của các lực lượng tiến bộ trên thế giới."
+    "difficulty": "medium",
+    "explanation": "Đại hội chủ trương xây dựng đảng riêng ở mỗi nước Đông Dương: Việt Nam, Lào, Campuchia."
   },
   {
     "id": 8,
-    "question": "Sức mạnh tổng hợp của cách mạng Việt Nam được kết hợp từ hai loại sức mạnh nào?",
+    "question": "ĐẠI HỘI II: Nhiệm vụ chính trước mắt của cách mạng là gì?",
     "answers": [
-      "Sức mạnh kinh tế và sức mạnh quân sự",
-      "Sức mạnh dân tộc và sức mạnh thời đại",
-      "Sức mạnh chính trị và sức mạnh văn hóa",
-      "Sức mạnh nhân dân và sức mạnh Nhà nước"
+      "Công nghiệp hóa",
+      "Xây dựng CNXH",
+      "Giải phóng dân tộc",
+      "Phát triển thương mại"
     ],
-    "correct": 1,
-    "difficulty": "easy",
-    "explanation": "Hồ Chí Minh chủ trương kết hợp sức mạnh dân tộc với sức mạnh thời đại, phát huy nội lực của dân tộc đồng thời tranh thủ sự đồng tình, ủng hộ và các nguồn lực từ bên ngoài."
+    "correct": 2,
+    "difficulty": "medium",
+    "explanation": "Nhiệm vụ trước mắt là đánh đuổi đế quốc xâm lược, giành độc lập dân tộc."
   },
   {
     "id": 9,
-    "question": "Để hiện thực hóa đoàn kết quốc tế, Hồ Chí Minh đã hình thành bao nhiêu mặt trận đoàn kết?",
+    "question": "ĐẠI ĐOÀN KẾT: Mặt trận Việt Minh và Hội Liên Việt hợp nhất thành mặt trận nào?",
     "answers": [
-      "2 mặt trận",
-      "3 mặt trận",
-      "4 mặt trận",
-      "5 mặt trận"
+      "Mặt trận Liên Việt",
+      "Mặt trận Dân chủ",
+      "Mặt trận Đông Dương",
+      "Mặt trận Việt Nam"
     ],
-    "correct": 2,
-    "difficulty": "easy",
-    "explanation": "Tư tưởng Hồ Chí Minh về đoàn kết quốc tế được thể hiện thông qua bốn mặt trận đoàn kết quốc tế, nhằm tập hợp và phát huy sức mạnh của các lực lượng tiến bộ trên thế giới."
+    "correct": 0,
+    "difficulty": "medium",
+    "explanation": "Tháng 3/1951, Việt Minh và Hội Liên Việt hợp nhất thành Mặt trận Liên Việt."
   },
   {
     "id": 10,
-    "question": "Khẩu hiệu thể hiện tinh thần độc lập, tự chủ mà Hồ Chí Minh luôn nêu cao là gì?",
+    "question": "ĐÔNG DƯƠNG: Liên minh nhân dân Việt – Miên – Lào thành lập năm nào?",
     "answers": [
-      "\"Không có gì quý hơn độc lập, tự do\"",
-      "\"Vì nhân dân quên mình\"",
-      "\"Tự lực cánh sinh, dựa vào sức mình là chính\"",
-      "\"Đoàn kết, đoàn kết, đại đoàn kết\""
+      "1949",
+      "1950",
+      "1951",
+      "1954"
     ],
     "correct": 2,
-    "difficulty": "easy",
-    "explanation": "Khẩu hiệu 'Tự lực cánh sinh, dựa vào sức mình là chính' thể hiện rõ tư tưởng độc lập, tự chủ của Hồ Chí Minh, đồng thời không phủ nhận việc tranh thủ sự giúp đỡ quốc tế."
+    "difficulty": "medium",
+    "explanation": "Liên minh nhân dân Việt – Miên – Lào thành lập ngày 11/3/1951."
   },
   {
     "id": 11,
-    "question": "Vì sao Hồ Chí Minh khẳng định đại đoàn kết toàn dân tộc là vấn đề có ý nghĩa chiến lược, quyết định thành công của cách mạng?",
+    "question": "KINH TẾ: Ngân hàng Quốc gia Việt Nam thành lập ngày nào?",
     "answers": [
-      "Vì đoàn kết giúp tiết kiệm nguồn lực kinh tế cho Nhà nước",
-      "Vì đây là vấn đề cơ bản, nhất quán, xuyên suốt tiến trình cách mạng; chính sách đoàn kết phù hợp quyết định thành bại của cách mạng trong từng giai đoạn",
-      "Vì đoàn kết là yêu cầu bắt buộc của các nước xã hội chủ nghĩa anh em",
-      "Vì đoàn kết giúp giảm bớt vai trò lãnh đạo của Đảng"
+      "6/5/1951",
+      "2/9/1945",
+      "19/5/1950",
+      "7/5/1954"
     ],
-    "correct": 1,
-    "difficulty": "hard",
-    "explanation": "Đại đoàn kết toàn dân tộc là vấn đề cơ bản, nhất quán và xuyên suốt tiến trình cách mạng. Trong mỗi giai đoạn, nếu xây dựng được chính sách đoàn kết phù hợp thì sẽ tập hợp và phát huy được sức mạnh của toàn dân, từ đó quyết định thành công của cách mạng."
+    "correct": 0,
+    "difficulty": "medium",
+    "explanation": "Ngân hàng Quốc gia Việt Nam thành lập ngày 6/5/1951."
   },
   {
     "id": 12,
-    "question": "Đâu KHÔNG phải là một trong 4 điều kiện xây dựng khối đại đoàn kết toàn dân tộc theo tư tưởng Hồ Chí Minh?",
+    "question": "HỘI NGHỊ TRUNG ƯƠNG: Hội nghị Trung ương 3 diễn ra vào tháng nào?",
     "answers": [
-      "Lấy lợi ích chung làm điểm quy tụ, tôn trọng lợi ích khác biệt chính đáng",
-      "Kế thừa truyền thống yêu nước - nhân nghĩa - đoàn kết của dân tộc",
-      "Xây dựng lực lượng vũ trang nhân dân hùng mạnh làm nòng cốt",
-      "Có lòng khoan dung, độ lượng với con người và có niềm tin vào nhân dân"
+      "1/1951",
+      "4/1952",
+      "1/1953",
+      "11/1953"
     ],
-    "correct": 2,
-    "difficulty": "hard",
-    "explanation": "Xây dựng lực lượng vũ trang nhân dân hùng mạnh không phải là một trong bốn điều kiện trực tiếp để xây dựng khối đại đoàn kết toàn dân tộc. Các điều kiện nhấn mạnh truyền thống đoàn kết, lợi ích chung, lòng khoan dung và niềm tin vào nhân dân."
+    "correct": 1,
+    "difficulty": "medium",
+    "explanation": "Hội nghị Trung ương lần thứ 3 họp tháng 4/1952."
   },
   {
     "id": 13,
-    "question": "Mặt trận đoàn kết Việt - Miên - Lào trong 4 mặt trận đoàn kết quốc tế của Hồ Chí Minh nhằm mục đích gì?",
+    "question": "CẢI CÁCH RUỘNG ĐẤT: Khẩu hiệu nổi tiếng trong cải cách ruộng đất là gì?",
     "answers": [
-      "Mở rộng, củng cố quan hệ đoàn kết hữu nghị với các nước châu Phi",
-      "Tranh thủ sự đồng tình của các nước xã hội chủ nghĩa chống đế quốc xâm lược",
-      "Phối hợp và giúp đỡ lẫn nhau cùng chiến đấu thắng lợi, dựa trên quan hệ láng giềng gần gũi, tương đồng lịch sử - văn hóa và chung kẻ thù",
-      "Khơi dậy sức mạnh và quyền tự quyết của mỗi dân tộc trong nội bộ Việt Nam"
+      "Người người có việc",
+      "Người cày có ruộng",
+      "Toàn dân kháng chiến",
+      "Độc lập tự do"
     ],
-    "correct": 2,
-    "difficulty": "hard",
-    "explanation": "Mặt trận đoàn kết Việt - Miên - Lào nhằm phối hợp và giúp đỡ lẫn nhau trong cuộc đấu tranh, dựa trên quan hệ láng giềng gần gũi, những tương đồng về lịch sử, văn hóa và cùng chống kẻ thù xâm lược."
+    "correct": 1,
+    "difficulty": "medium",
+    "explanation": "Khẩu hiệu 'Người cày có ruộng' gắn với cải cách ruộng đất."
   },
   {
     "id": 14,
-    "question": "Theo Hồ Chí Minh, mối quan hệ giữa 'độc lập, tự chủ' và 'đoàn kết quốc tế' được thể hiện như thế nào?",
+    "question": "KẾ HOẠCH NAVA: Kế hoạch Nava được thực hiện với mục đích giành thắng lợi trong bao lâu?",
     "answers": [
-      "Đoàn kết quốc tế là yếu tố quyết định, nội lực chỉ đóng vai trò hỗ trợ",
-      "Hai yếu tố độc lập với nhau, không liên quan",
-      "Nội lực là nhân tố quyết định; nguồn lực ngoại sinh (đoàn kết quốc tế) chỉ phát huy tác dụng thông qua nguồn lực nội sinh - phải có thực lực mới tranh thủ được sự ủng hộ quốc tế",
-      "Cần ưu tiên tranh thủ viện trợ quốc tế trước, sau đó mới xây dựng nội lực"
+      "6 tháng",
+      "12 tháng",
+      "18 tháng",
+      "24 tháng"
     ],
     "correct": 2,
-    "difficulty": "hard",
-    "explanation": "Hồ Chí Minh luôn đề cao độc lập, tự chủ và sức mạnh nội lực. Đoàn kết quốc tế có vai trò quan trọng nhưng chỉ có thể phát huy hiệu quả khi dựa trên thực lực của dân tộc; vì vậy phải kết hợp nội lực với nguồn lực bên ngoài."
+    "difficulty": "medium",
+    "explanation": "Kế hoạch Nava dự kiến giành thắng lợi trong 18 tháng."
   },
   {
     "id": 15,
-    "question": "Biểu hiện nào sau đây thể hiện đúng nhất sự vận dụng tư tưởng Hồ Chí Minh về đại đoàn kết và đoàn kết quốc tế của Đảng ta trong giai đoạn hiện nay?",
+    "question": "ĐÔNG XUÂN 1953–1954: Phương châm chiến lược là gì?",
     "answers": [
-      "Chuyển từ 'muốn là bạn' sang 'là bạn và đối tác tin cậy, thành viên có trách nhiệm', hội nhập quốc tế ngày càng sâu rộng, kết hợp xây dựng khối đại đoàn kết dân tộc trên nền tảng liên minh công - nông - trí dưới sự lãnh đạo của Đảng",
-      "Chỉ tập trung phát triển quan hệ với một số nước lớn, hạn chế hội nhập đa phương",
-      "Đặt lợi ích của các tổ chức quốc tế lên trên lợi ích dân tộc",
-      "Giảm vai trò của Mặt trận Tổ quốc Việt Nam trong đời sống chính trị - xã hội"
+      "Đánh nhanh thắng nhanh",
+      "Tích cực, chủ động, cơ động, linh hoạt",
+      "Phòng thủ tuyệt đối",
+      "Rút lui toàn diện"
     ],
-    "correct": 0,
-    "difficulty": "hard",
-    "explanation": "Việc chủ động hội nhập quốc tế, mở rộng quan hệ đối ngoại, trở thành bạn và đối tác tin cậy, thành viên có trách nhiệm của cộng đồng quốc tế, đồng thời củng cố khối đại đoàn kết toàn dân tộc thể hiện sự vận dụng tư tưởng Hồ Chí Minh trong giai đoạn hiện nay."
+    "correct": 1,
+    "difficulty": "medium",
+    "explanation": "Phương châm chiến lược Đông Xuân 1953–1954 là tích cực, chủ động, cơ động, linh hoạt."
   },
   {
     "id": 16,
-    "question": "Theo Hồ Chí Minh, lực lượng nào giữ vai trò lãnh đạo khối đại đoàn kết toàn dân tộc?",
+    "question": "ĐIỆN BIÊN PHỦ: Phương châm tác chiến ban đầu của chiến dịch là gì?",
     "answers": [
-      "Đảng Cộng sản Việt Nam",
-      "Nhà nước Việt Nam Dân chủ Cộng hòa",
-      "Mặt trận Tổ quốc Việt Nam",
-      "Các tổ chức quần chúng"
+      "Đánh chắc, tiến chắc",
+      "Đánh lâu dài",
+      "Đánh nhanh, giải quyết nhanh",
+      "Tiến công từng bước"
     ],
-    "correct": 0,
+    "correct": 2,
     "difficulty": "medium",
-    "explanation": "Hồ Chí Minh khẳng định Đảng Cộng sản Việt Nam là lực lượng lãnh đạo khối đại đoàn kết toàn dân tộc. Đảng phải gắn bó máu thịt với nhân dân, xây dựng khối đoàn kết rộng rãi và bền vững."
+    "explanation": "Ban đầu ta chọn 'Đánh nhanh, giải quyết nhanh', sau chuyển sang 'Đánh chắc, tiến chắc'."
   },
   {
     "id": 17,
-    "question": "Cơ sở tư tưởng của đoàn kết quốc tế theo Hồ Chí Minh là sự kết hợp giữa hai yếu tố nào?",
+    "question": "ĐIỆN BIÊN PHỦ: Ai là Chỉ huy trưởng chiến dịch Điện Biên Phủ?",
     "answers": [
-      "Chủ nghĩa dân tộc hẹp hòi với chủ nghĩa thực dân",
-      "Chủ nghĩa yêu nước chân chính với chủ nghĩa quốc tế vô sản",
-      "Chủ nghĩa tự do cá nhân với chủ nghĩa đa phương",
-      "Chủ nghĩa bảo hộ với chủ nghĩa khu vực"
+      "Võ Nguyên Giáp",
+      "Trường Chinh",
+      "Phạm Văn Đồng",
+      "Nguyễn Chí Thanh"
     ],
-    "correct": 1,
+    "correct": 0,
     "difficulty": "medium",
-    "explanation": "Hồ Chí Minh kết hợp chủ nghĩa yêu nước chân chính với chủ nghĩa quốc tế vô sản. Đoàn kết quốc tế phải xuất phát từ lợi ích dân tộc và lợi ích chung của nhân loại tiến bộ."
+    "explanation": "Đại tướng Võ Nguyên Giáp là Tổng chỉ huy chiến dịch Điện Biên Phủ."
   },
   {
     "id": 18,
-    "question": "Trong tư tưởng Hồ Chí Minh, tự phê bình và phê bình trong khối đoàn kết nhằm mục đích gì?",
+    "question": "ĐIỆN BIÊN PHỦ: Chiến dịch Điện Biên Phủ diễn ra trong bao nhiêu ngày đêm?",
     "answers": [
-      "Loại trừ những người có ý kiến khác",
-      "Giữ nguyên mọi quan điểm cá nhân",
-      "Che giấu khuyết điểm để bảo vệ uy tín",
-      "Củng cố và tăng cường đoàn kết"
+      "45 ngày đêm",
+      "50 ngày đêm",
+      "55 ngày đêm",
+      "56 ngày đêm"
     ],
     "correct": 3,
     "difficulty": "medium",
-    "explanation": "Hồ Chí Minh coi tự phê bình và phê bình là vũ khí để sửa chữa khuyết điểm, thống nhất tư tưởng và củng cố đoàn kết, chứ không phải để chia rẽ hoặc loại trừ người có ý kiến khác."
+    "explanation": "Chiến dịch diễn ra 56 ngày đêm, từ 13/3 đến 7/5/1954."
   },
   {
     "id": 19,
-    "question": "Hồ Chí Minh chủ trương giải quyết quan hệ giữa lợi ích chung và lợi ích riêng trong khối đại đoàn kết như thế nào?",
+    "question": "HIỆP ĐỊNH GIƠNEVƠ: Hiệp định Giơnevơ được ký kết vào ngày nào?",
     "answers": [
-      "Lấy lợi ích chung làm điểm quy tụ, tôn trọng lợi ích khác biệt chính đáng",
-      "Chỉ quan tâm lợi ích chung, phủ nhận mọi lợi ích riêng",
-      "Đặt lợi ích riêng lên trên lợi ích chung",
-      "Không cần giải quyết vì lợi ích các bên luôn giống nhau"
+      "7/5/1954",
+      "8/5/1954",
+      "21/7/1954",
+      "2/9/1954"
     ],
-    "correct": 0,
-    "difficulty": "hard",
-    "explanation": "Hồ Chí Minh lấy lợi ích chung của dân tộc làm điểm quy tụ, đồng thời tôn trọng và giải quyết hài hòa các lợi ích khác biệt chính đáng của từng giai cấp, tầng lớp, dân tộc và tôn giáo."
+    "correct": 2,
+    "difficulty": "medium",
+    "explanation": "Hiệp định Giơnevơ về Đông Dương được ký ngày 21/7/1954."
   },
   {
     "id": 20,
-    "question": "Theo Hồ Chí Minh, sự nghiệp cách mạng là sự nghiệp của lực lượng nào?",
+    "question": "HIỆP ĐỊNH GIƠNEVƠ: Vĩ tuyến nào được chọn làm giới tuyến quân sự tạm thời?",
     "answers": [
-      "Của một nhóm lãnh đạo ưu tú",
-      "Của quần chúng nhân dân",
-      "Của lực lượng vũ trang",
-      "Của các tổ chức quốc tế"
+      "Vĩ tuyến 13",
+      "Vĩ tuyến 15",
+      "Vĩ tuyến 17",
+      "Vĩ tuyến 20"
+    ],
+    "correct": 2,
+    "difficulty": "medium",
+    "explanation": "Hiệp định chọn vĩ tuyến 17 làm giới tuyến quân sự tạm thời."
+  },
+  {
+    "id": 21,
+    "question": "TOÁN HỌC: 1 + 2 × 3 - 4 = ?",
+    "answers": [
+      "3",
+      "5",
+      "7",
+      "9"
+    ],
+    "correct": 0,
+    "difficulty": "easy",
+    "explanation": "Thực hiện nhân chia trước, cộng trừ sau: 1 + 6 − 4 = 3."
+  },
+  {
+    "id": 22,
+    "question": "GIẢI TRÍ: Biệt danh nổi tiếng của Trường Giang là gì?",
+    "answers": [
+      "Mười Khó",
+      "Mười Khỏe",
+      "Giáo sư Xoay",
+      "Giang Đẫm"
+    ],
+    "correct": 0,
+    "difficulty": "easy",
+    "explanation": "Trường Giang được biết đến với biệt danh 'Mười Khó'."
+  },
+  {
+    "id": 23,
+    "question": "KIẾN THỨC: Một tuần có bao nhiêu ngày?",
+    "answers": [
+      "5 ngày",
+      "6 ngày",
+      "7 ngày",
+      "8 ngày"
+    ],
+    "correct": 2,
+    "difficulty": "easy",
+    "explanation": "Một tuần có 7 ngày."
+  },
+  {
+    "id": 24,
+    "question": "ĐỊA LÝ: Thủ đô của Nhật Bản là thành phố nào?",
+    "answers": [
+      "Seoul",
+      "Tokyo",
+      "Bắc Kinh",
+      "Bangkok"
     ],
     "correct": 1,
-    "difficulty": "medium",
-    "explanation": "Hồ Chí Minh khẳng định cách mạng là sự nghiệp của quần chúng nhân dân. Nhân dân là chủ thể, là nguồn sức mạnh và là người quyết định thắng lợi của cách mạng."
+    "difficulty": "easy",
+    "explanation": "Tokyo là thủ đô của Nhật Bản."
+  },
+  {
+    "id": 25,
+    "question": "KHOA HỌC: Công thức hóa học của nước là gì?",
+    "answers": [
+      "CO2",
+      "O2",
+      "H2O",
+      "NaCl"
+    ],
+    "correct": 2,
+    "difficulty": "easy",
+    "explanation": "Công thức hóa học của nước là H2O."
   }
 ]

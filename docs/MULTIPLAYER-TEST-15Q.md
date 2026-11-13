@@ -2,13 +2,13 @@
 
 - **Ngày:** 13/11/2026
 - **Phòng:** `ZS4WGT`
-- **Cấu hình:** 15 câu, 15 giây/câu, công bố 6 giây, điểm nhân đôi, tối đa `32.767`.
+- **Cấu hình:** 15 câu, 15 giây/câu, công bố 6 giây, thưởng câu nhân đôi, tối đa `32.767` gói khi không mang thêm; tối đa lý thuyết `245.760` gói nếu luôn mang 100% và đúng hết.
 - **Môi trường:** Vite `http://localhost:5173`, server Socket.IO `http://localhost:3001`.
 - **Cách chạy:** 1 tab quản trò + 6 tab người chơi trong trình duyệt; người chơi trả lời tự động đúng/sai theo kịch bản để kiểm tra toàn bộ ván.
 
 ## Kết quả chung cuộc
 
-| Hạng | Người chơi | Điểm | Số câu đúng |
+| Hạng | Người chơi | Gói hàng | Số câu đúng |
 |---:|---|---:|---:|
 | 1 | Player 4 | 32.767 | 15/15 |
 | 2 | Player 5 | 32.767 | 15/15 |
@@ -17,9 +17,9 @@
 | 5 | Player 1 | 32.767 | 15/15 |
 | 6 | Player 6 | 32.751 | 14/15 |
 
-- Quản trò thấy đủ 6 người, `CÂU 15/15`, `VÁN ĐẤU HOÀN TẤT`, vô địch **Player 4 · 32.767 điểm**.
-- Player 6 (hạng 6) nhận trang gà **“CHƯA VÀO TOP 5!”**, hiển thị `HẠNG 6/6`, `32.751 điểm`, phát hết nhạc lose rồi mới hiện bảng xếp hạng chung cuộc.
-- Player 1 vẫn đạt 15/15 dù đã dùng cả 4 trợ giúp; điểm tối đa đúng bằng `2^15 - 1 = 32.767`.
+- Quản trò thấy đủ 6 người, `CÂU 15/15`, `VÁN ĐẤU HOÀN TẤT`, vô địch **Player 4 · 32.767 gói**.
+- Player 6 (hạng 6) nhận trang gà **“CHƯA VÀO TOP 5!”**, hiển thị `HẠNG 6/6`, `32.751 gói`, phát hết nhạc lose rồi mới hiện bảng xếp hạng chung cuộc.
+- Player 1 vẫn đạt 15/15 dù đã dùng cả 4 trợ giúp; mức tối đa không mang thêm đúng bằng `2^15 - 1 = 32.767`.
 
 ## Trợ giúp đã kiểm tra trên Player 1
 
@@ -75,7 +75,16 @@ Sau khi dùng, cả 4 nút đều có dấu `✕` và không dùng lại đượ
 - **Hiệu năng:** trang chủ từ ~34–42 FPS (production cũ, CPU throttle 4×) lên **~60 FPS** ở bản mới; local dev và mobile cũng ~60 FPS. Chi tiết nguyên nhân và số đo ở [PERFORMANCE-AUDIT.md](./PERFORMANCE-AUDIT.md).
 - Đây là test chức năng nhanh, không phải kiểm tra điểm tối đa; logic chấm điểm/trợ giúp không thay đổi.
 
+## Mang thêm gói hàng
+
+- **Công thức:** `W = floor(score × percent / 100)`, `percent ∈ {10, 25, 100}`; server tự tính, client không gửi số gói.
+- **Khóa:** `wagerLockAt = endsAt - 3000`; trước mốc này đổi được nhiều lần, sau mốc server trả `WAGER_LOCKED` và UI xám toàn bộ.
+- **Đúng:** `score += reward + W`; **sai/hết giờ:** không nhận `reward`, `score -= W` (không xuống dưới 0).
+- **Kiểm tra tự động:** `npm run test:scoring` kiểm tra công thức/rounding; `npm run test:wager` chạy 2 câu thật qua Socket.IO, kiểm tra `WAGER_NOT_AVAILABLE`, `INVALID_WAGER`, `WRONG_QUESTION`, `WAGER_LOCKED`, cộng thưởng, trừ phạt và final.
+- **UI:** panel nằm giữa thưởng câu và 4 trợ giúp; hiện số gói mang theo, đếm ngược tới khóa, disable mức không đủ gói; reveal hiện tách `Thưởng câu` / `Mang thêm` / tổng.
+- **Lưu ý:** câu 1 chưa có gói nên cả 3 mức đều chưa dùng được; từ câu 2 trở đi mới có gói để mang.
+
 ## Ghi chú
 
-- Bộ câu hỏi có 20 câu nhưng mỗi ván chỉ bốc 15 câu, không lặp.
+- Bộ câu hỏi hiện có 25 câu; mỗi ván bốc ngẫu nhiên 15 câu, không lặp.
 - Test này dùng thao tác trình duyệt tự động để trả lời nhanh; các lớp UI, Socket.IO, chấm điểm, reveal, xếp hạng và trang thua đều là mã sản phẩm thật.

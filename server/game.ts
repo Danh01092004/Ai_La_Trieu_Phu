@@ -1,7 +1,12 @@
 import { randomInt } from 'node:crypto'
 import type { Server } from 'socket.io'
 import rawQuestions from '../src/data/questions.json' with { type: 'json' }
-import { pointsForLevel } from '../src/config/multiplayerConfig.js'
+import {
+  MIN_QUESTION_BANK,
+  pointsForLevel,
+  WAGER_PERCENTS,
+  wagerForScore,
+} from '../src/config/multiplayerConfig.js'
 import type { LifelineType, Question } from '../src/types'
 import type {
   AdminPlayerStatus,
@@ -18,6 +23,9 @@ import type {
   LeaderboardEntry,
   LifelineAck,
   LifelineResult,
+  WagerAck,
+  WagerPercent,
+  WagerState,
 } from '../src/types/multiplayer'
 import {
   ANSWER_GRACE_MS,
@@ -25,6 +33,7 @@ import {
   QUESTION_COUNT,
   QUESTION_DURATION_MS,
   QUESTION_REVEAL_MS,
+  WAGER_LOCK_MS,
 } from './config.js'
 import { ResultsStore } from './results.js'
 import {
@@ -44,15 +53,16 @@ const QUESTION_DIFFICULTIES = new Set<Question['difficulty']>([
   'very_hard',
 ])
 const LIFELINE_TYPES = new Set<LifelineType>(['fifty', 'phone', 'audience', 'mc'])
+const WAGER_PERCENT_SET = new Set<number>([0, ...WAGER_PERCENTS])
 
 /**
  * Fail fast at boot rather than leaving a room stuck in `playing` when a
  * deployment accidentally removes questions from the bank.
  */
 function assertQuestionBank(): void {
-  if (questionBank.length < QUESTION_COUNT) {
+  if (questionBank.length < MIN_QUESTION_BANK) {
     throw new Error(
-      `Question bank has ${questionBank.length} entries but QUESTION_COUNT is ${QUESTION_COUNT}.`,
+      `Question bank has ${questionBank.length} entries but at least ${MIN_QUESTION_BANK} are required.`,
     )
   }
 
@@ -91,6 +101,12 @@ interface AnswerRecord {
   receivedAt: number
 }
 
+interface WagerRecord {
+  percent: WagerPercent
+  amount: number
+  receivedAt: number
+}
+
 interface RevealSnapshot {
   question: GameQuestion
   questionIndex: number
@@ -104,6 +120,10 @@ interface RevealSnapshot {
   /** Wall-clock deadline for this reveal; lets a resumed client show only the remainder. */
   revealEndsAt: number
   loseDurationMs: number
+  /** Wagers captured before scores changed, used to rebuild reveal deltas. */
+  wagers: Map<string, WagerRecord>
+  /** Score at the moment the question closed; used for the actual delta. */
+  scoresBefore: Map<string, number>
 }
 
 interface MatchState {
@@ -119,6 +139,8 @@ interface MatchState {
   questionTimer: NodeJS.Timeout | null
   revealTimer: NodeJS.Timeout | null
   answers: Map<string, Map<number, AnswerRecord>>
+  /** Per-player wager for the currently open question. */
+  wagers: Map<string, WagerRecord>
   /** Per-player 50:50 removals for the currently open question. */
   fiftyRemoved: Map<string, number[]>
   /** Base reveal data kept so a reconnect can rebuild the personal payload. */
@@ -187,9 +209,10 @@ export class GameManager {
   start(room: Room): boolean {
     if (this.matches.has(room.code)) return false
 
-    // `assertQuestionBank` guarantees a full unique draw at boot; this guard
-    // keeps a future runtime configuration mistake from throwing inside start.
-    if (questionBank.length < QUESTION_COUNT) return false
+    // `assertQuestionBank` guarantees at least 25 unique entries at boot; this
+    // guard keeps a future runtime configuration mistake from throwing inside
+    // start.
+    if (questionBank.length < MIN_QUESTION_BANK) return false
 
     const questions = drawQuestions(QUESTION_COUNT)
     const match: MatchState = {
@@ -204,6 +227,7 @@ export class GameManager {
       questionTimer: null,
       revealTimer: null,
       answers: new Map(),
+      wagers: new Map(),
       fiftyRemoved: new Map(),
       lastReveal: null,
     }
@@ -284,6 +308,80 @@ export class GameManager {
       accepted: true,
       questionIndex: currentQuestionIndex,
       receivedAt: now,
+    }
+  }
+
+  /**
+   * Set the current question's wager. Repeated calls replace the previous
+   * choice until the lock window; the amount is computed from the player's
+   * current score and never from a client-supplied number.
+   */
+  wager(playerId: string, payload: unknown): WagerAck {
+    const room = this.rooms.getRoomForPlayer(playerId)
+    if (!room) {
+      return fail('NOT_IN_ROOM', 'Bạn không ở trong phòng nào.')
+    }
+
+    const member = room.players.get(playerId)
+    if (!member || member.role !== 'player') {
+      return fail('NOT_A_PLAYER', 'Quản trò không thể mang thêm gói hàng.')
+    }
+    if (room.status !== 'playing') {
+      return fail('ROOM_NOT_PLAYING', 'Ván đấu chưa bắt đầu.')
+    }
+
+    const match = this.matches.get(room.code)
+    if (!match || match.index < 0) {
+      return fail('NO_ACTIVE_QUESTION', 'Chưa có câu hỏi nào đang mở.')
+    }
+
+    const record = asRecord(payload)
+    const questionIndex = record?.questionIndex
+    const percent = record?.percent
+    if (
+      typeof questionIndex !== 'number' ||
+      !Number.isInteger(questionIndex) ||
+      questionIndex !== match.index + 1
+    ) {
+      return fail('WRONG_QUESTION', 'Câu hỏi đã thay đổi. Hãy chọn lại ở câu hiện tại.')
+    }
+    if (
+      typeof percent !== 'number' ||
+      !Number.isInteger(percent) ||
+      !WAGER_PERCENT_SET.has(percent)
+    ) {
+      return fail('INVALID_WAGER', 'Mức mang thêm không hợp lệ.')
+    }
+
+    const now = Date.now()
+    const wagerLockAt = match.deadline - WAGER_LOCK_MS
+    if (!match.open || now >= wagerLockAt) {
+      return fail('WAGER_LOCKED', 'Đã khóa mang thêm ở 3 giây cuối.')
+    }
+
+    const amount = wagerForScore(member.score, percent)
+    if (percent > 0 && amount <= 0) {
+      return fail(
+        'WAGER_NOT_AVAILABLE',
+        'Bạn chưa có đủ gói hàng để mang thêm ở mức này.',
+      )
+    }
+
+    if (percent === 0) {
+      match.wagers.delete(playerId)
+    } else {
+      match.wagers.set(playerId, {
+        percent: percent as WagerPercent,
+        amount,
+        receivedAt: now,
+      })
+    }
+
+    return {
+      ok: true,
+      percent: percent as WagerPercent,
+      amount,
+      wagerLockAt,
     }
   }
 
@@ -400,6 +498,7 @@ export class GameManager {
         question: this.buildQuestionPayload(match),
         answered: Boolean(answer),
         selectedAnswer: answer?.answerIndex ?? null,
+        wager: this.wagerState(match, playerId),
         lifelines: { ...player.lifelines },
         removedAnswers: [...(match.fiftyRemoved.get(playerId) ?? [])],
       }
@@ -416,10 +515,12 @@ export class GameManager {
           question: match.lastReveal.question,
           endsAt: match.deadline,
           durationMs: QUESTION_DURATION_MS,
+          wagerLockAt: match.deadline - WAGER_LOCK_MS,
           serverNow: Date.now(),
         },
         reveal,
         answered: true,
+        wager: this.wagerState(match, playerId),
         lifelines: { ...player.lifelines },
         removedAnswers: [...(match.fiftyRemoved.get(playerId) ?? [])],
       }
@@ -524,7 +625,17 @@ export class GameManager {
       question: match.publicQuestions[match.index],
       endsAt: match.deadline,
       durationMs: QUESTION_DURATION_MS,
+      wagerLockAt: match.deadline - WAGER_LOCK_MS,
       serverNow,
+    }
+  }
+
+  private wagerState(match: MatchState, playerId: string): WagerState {
+    const wager = match.wagers.get(playerId)
+    return {
+      percent: wager?.percent ?? 0,
+      amount: wager?.amount ?? 0,
+      wagerLockAt: match.deadline - WAGER_LOCK_MS,
     }
   }
 
@@ -541,6 +652,14 @@ export class GameManager {
     const entry = findEntry(base.leaderboard, playerId)
     if (!entry) return null
 
+    const correct = answer?.answerIndex === base.correctIndex
+    const baseReward = pointsForLevel(base.questionIndex)
+    const wager = base.wagers.get(playerId)
+    const wagerPercent = (wager?.percent ?? 0) as WagerPercent
+    const wagerAmount = wager?.amount ?? 0
+    const scoreBefore = base.scoresBefore.get(playerId) ?? player.score
+    const wagerPenalty = correct ? 0 : Math.min(wagerAmount, scoreBefore)
+
     return {
       index: base.questionIndex,
       total: base.questionTotal,
@@ -548,11 +667,13 @@ export class GameManager {
       explanation: base.explanation,
       distribution: base.distribution,
       yourAnswer: answer?.answerIndex ?? null,
-      yourCorrect: answer?.answerIndex === base.correctIndex,
-      yourDelta:
-        answer?.answerIndex === base.correctIndex
-          ? pointsForLevel(base.questionIndex)
-          : 0,
+      yourCorrect: correct,
+      yourBaseReward: baseReward,
+      yourBaseDelta: correct ? baseReward : 0,
+      yourWagerPercent: wagerPercent,
+      yourWagerAmount: wagerAmount,
+      yourWagerDelta: correct ? wagerAmount : -wagerPenalty,
+      yourDelta: player.score - scoreBefore,
       yourScore: player.score,
       yourCorrectCount: player.correct,
       yourRank: entry.rank,
@@ -593,6 +714,7 @@ export class GameManager {
     match.questionOpenedAt = now
     match.open = true
     match.fiftyRemoved.clear()
+    match.wagers.clear()
     match.lastReveal = null
 
     const room = this.rooms.getRoom(match.code)
@@ -646,15 +768,30 @@ export class GameManager {
       distribution.counts[answer.answerIndex] += 1
     }
 
+    // Capture the pre-score state so the reveal can show the exact base and
+    // wager deltas, including the zero-floor on a wrong answer.
+    const wagers = new Map(match.wagers)
+    const scoresBefore = new Map(
+      players.map((player) => [player.id, player.score] as const),
+    )
+    const baseReward = pointsForLevel(currentQuestionIndex)
+
     // Score every player first so the leaderboard and each player's rank use
     // exactly the same snapshot.
     for (const player of players) {
       const answer = match.answers.get(player.id)?.get(currentQuestionIndex)
-      if (!answer || answer.answerIndex !== question.correct) continue
+      const wager = wagers.get(player.id)
+      const wagerAmount = wager?.amount ?? 0
 
-      player.score += pointsForLevel(currentQuestionIndex)
-      player.correct += 1
-      player.totalMs += Math.max(0, answer.receivedAt - match.questionOpenedAt)
+      if (answer && answer.answerIndex === question.correct) {
+        player.score += baseReward + wagerAmount
+        player.correct += 1
+        player.totalMs += Math.max(0, answer.receivedAt - match.questionOpenedAt)
+      } else if (wagerAmount > 0) {
+        // Wrong/timeout forfeits the base reward (it is simply not added) and
+        // loses the packages carried into the question, never below zero.
+        player.score = Math.max(0, player.score - wagerAmount)
+      }
     }
 
     const leaderboard = buildLeaderboard(players)
@@ -680,6 +817,8 @@ export class GameManager {
       revealDurationMs,
       revealEndsAt,
       loseDurationMs: LOSE_DURATION_MS,
+      wagers,
+      scoresBefore,
     }
     match.lastReveal = base
 

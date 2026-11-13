@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { LifelineType } from '@/types'
+import type { WagerPercent } from '@/types/multiplayer'
 import { GameScene } from '@/components/GameScene'
 import { ActionButton } from '@/components/ui/ActionButton'
 import { TextField } from '@/components/ui/TextField'
@@ -115,6 +116,10 @@ export function Multiplayer() {
     submitting,
     answerError,
     answerErrorCode,
+    wagerPercent,
+    wagerAmount,
+    wagerBusy,
+    wagerError,
     lifelines,
     removedAnswers,
     lifelineResult,
@@ -124,6 +129,8 @@ export function Multiplayer() {
     joinRoom,
     startRoom,
     submitAnswer,
+    submitWager,
+    clearWagerError,
     useLifeline,
     dismissLifelineResult,
     clearLifelineError,
@@ -246,6 +253,14 @@ export function Multiplayer() {
       void submitAnswer(index)
     },
     [submitAnswer, unlockAudio],
+  )
+
+  const handleWager = useCallback(
+    (percent: WagerPercent) => {
+      unlockAudio()
+      void submitWager(percent)
+    },
+    [submitWager, unlockAudio],
   )
 
   const handleLifeline = useCallback(
@@ -375,7 +390,7 @@ export function Multiplayer() {
             Đang khôi phục phiên phòng...
           </p>
           <p className="mt-2 max-w-sm text-xs leading-relaxed text-white/50">
-            Điểm số, câu hỏi và trợ giúp của bạn sẽ được giữ nguyên.
+            Gói hàng, câu hỏi và trợ giúp của bạn sẽ được giữ nguyên.
           </p>
         </div>
       </GameScene>
@@ -476,8 +491,14 @@ export function Multiplayer() {
             lifelineResult={lifelineResult}
             lifelineBusy={lifelineBusy}
             lifelineError={lifelineError}
+            wagerPercent={wagerPercent}
+            wagerAmount={wagerAmount}
+            wagerBusy={wagerBusy}
+            wagerError={wagerError}
             busy={busy}
             onAnswer={handleAnswer}
+            onWager={handleWager}
+            onClearWagerError={clearWagerError}
             onLifeline={handleLifeline}
             onDismissLifelineResult={dismissLifelineResult}
             onClearLifelineError={clearLifelineError}

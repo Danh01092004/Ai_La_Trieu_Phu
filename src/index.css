@@ -126,8 +126,25 @@ body {
   }
 }
 
+/* Cheap decorative motion for the wager crate; no blur/filter involved. */
+.wager-icon {
+  animation: wagerBob 2.8s ease-in-out infinite;
+  transform-origin: 50% 60%;
+}
+
+@keyframes wagerBob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-2px) rotate(2deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .logo-float {
+  .logo-float,
+  .wager-icon {
     animation: none;
   }
 }

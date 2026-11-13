@@ -21,6 +21,8 @@ import type {
   RoomResumeAck,
   RoomStartAck,
   RoomState,
+  WagerAck,
+  WagerPercent,
 } from '@/types/multiplayer'
 import { getMultiplayerSocket, type MultiplayerSocket } from './socket'
 import { gameErrorMessage, roomErrorMessage } from './messages'
@@ -205,6 +207,16 @@ function emitAnswer(
   })
 }
 
+function emitWager(
+  socket: MultiplayerSocket,
+  questionIndex: number,
+  percent: WagerPercent,
+): Promise<WagerAck> {
+  return new Promise((resolve) => {
+    socket.emit('wager:submit', { questionIndex, percent }, resolve)
+  })
+}
+
 function emitLifeline(
   socket: MultiplayerSocket,
   type: LifelineType,
@@ -270,6 +282,10 @@ export function useRoom() {
   const [submitting, setSubmitting] = useState(false)
   const [answerError, setAnswerError] = useState<string | null>(null)
   const [answerErrorCode, setAnswerErrorCode] = useState<GameErrorCode | null>(null)
+  const [wagerPercent, setWagerPercent] = useState<WagerPercent>(0)
+  const [wagerAmount, setWagerAmount] = useState(0)
+  const [wagerBusy, setWagerBusy] = useState(false)
+  const [wagerError, setWagerError] = useState<string | null>(null)
   const [reveal, setReveal] = useState<GameRevealPayload | null>(null)
   const [final, setFinal] = useState<GameEndPayload | null>(null)
   const [lifelines, setLifelines] = useState<LifelineState>(EMPTY_LIFELINES)
@@ -286,6 +302,7 @@ export function useRoom() {
   const questionRef = useRef<GameQuestionPayload | null>(null)
   const answeredRef = useRef(false)
   const submittingRef = useRef(false)
+  const wagerBusyRef = useRef(false)
   const busyRef = useRef(false)
   const lifelineBusyRef = useRef(false)
   const lifelinesRef = useRef<LifelineState>(EMPTY_LIFELINES)
@@ -316,17 +333,26 @@ export function useRoom() {
     setAnswerErrorCode(null)
   }, [])
 
+  const resetWager = useCallback(() => {
+    wagerBusyRef.current = false
+    setWagerBusy(false)
+    setWagerPercent(0)
+    setWagerAmount(0)
+    setWagerError(null)
+  }, [])
+
   const commitQuestion = useCallback(
     (next: GameQuestionPayload | null) => {
       questionRef.current = next
       setQuestion(next)
       clearAnswer()
+      resetWager()
       setReveal(null)
       setRemovedAnswers([])
       setLifelineResult(null)
       setLifelineError(null)
     },
-    [clearAnswer],
+    [clearAnswer, resetWager],
   )
 
   const commitLifelines = useCallback((next: LifelineState) => {
@@ -352,6 +378,8 @@ export function useRoom() {
     )
   }, [])
 
+  const clearWagerError = useCallback(() => setWagerError(null), [])
+
   /** Restore the exact screen from a `room:resume` ack. */
   const applySnapshot = useCallback(
     (snapshot: GameSnapshot) => {
@@ -374,6 +402,8 @@ export function useRoom() {
         commitLifelines(snapshot.lifelines)
         setRemovedAnswers(snapshot.removedAnswers)
         setReveal(null)
+        setWagerPercent(snapshot.wager.percent)
+        setWagerAmount(snapshot.wager.amount)
         answeredRef.current = snapshot.answered
         setAnswered(snapshot.answered)
         setSelectedAnswer(snapshot.selectedAnswer)
@@ -385,6 +415,8 @@ export function useRoom() {
         commitQuestion(snapshot.question)
         commitLifelines(snapshot.lifelines)
         setRemovedAnswers(snapshot.removedAnswers)
+        setWagerPercent(snapshot.wager.percent)
+        setWagerAmount(snapshot.wager.amount)
         answeredRef.current = true
         setAnswered(true)
         setSelectedAnswer(snapshot.reveal.yourAnswer)
@@ -900,6 +932,57 @@ export function useRoom() {
   )
 
   /**
+   * Wagers can be changed several times before the server lock. The ack is
+   * authoritative because it contains the package amount computed server-side.
+   */
+  const submitWager = useCallback(
+    async (percent: WagerPercent): Promise<boolean> => {
+      const current = questionRef.current
+      if (!current || wagerBusyRef.current) return false
+
+      if (!socket.connected) {
+        setWagerError('Chưa kết nối được máy chủ. Chưa đổi được mức mang thêm.')
+        return false
+      }
+
+      const questionIndex = current.index
+      wagerBusyRef.current = true
+      setWagerBusy(true)
+      setWagerError(null)
+
+      try {
+        const result = await timeout(
+          emitWager(socket, questionIndex, percent),
+          REQUEST_TIMEOUT_MS,
+          'Máy chủ chưa xác nhận mức mang thêm. Bạn có thể thử lại.',
+        )
+
+        if (!mountedRef.current || questionRef.current?.index !== questionIndex) {
+          return false
+        }
+
+        if (!result.ok) {
+          setWagerError(gameErrorMessage(result))
+          return false
+        }
+
+        setWagerPercent(result.percent)
+        setWagerAmount(result.amount)
+        return true
+      } catch (requestError: unknown) {
+        if (mountedRef.current && questionRef.current?.index === questionIndex) {
+          setWagerError(errorMessage(requestError))
+        }
+        return false
+      } finally {
+        wagerBusyRef.current = false
+        if (mountedRef.current) setWagerBusy(false)
+      }
+    },
+    [socket],
+  )
+
+  /**
    * Lifelines are server-authoritative: the client only disables a button
    * after the ack, and the server rejects a second use even if the UI is stale.
    */
@@ -1153,6 +1236,10 @@ export function useRoom() {
     submitting,
     answerError,
     answerErrorCode,
+    wagerPercent,
+    wagerAmount,
+    wagerBusy,
+    wagerError,
     reveal,
     final,
     lifelines,
@@ -1164,6 +1251,8 @@ export function useRoom() {
     joinRoom,
     startRoom,
     submitAnswer,
+    submitWager,
+    clearWagerError,
     useLifeline,
     dismissLifelineResult,
     clearLifelineError,

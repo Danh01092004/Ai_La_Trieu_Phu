@@ -6,6 +6,7 @@ import type {
   GameQuestionPayload,
   LifelineResult,
   RoomState,
+  WagerPercent,
 } from '@/types/multiplayer'
 import type { RoomConnectionStatus } from '@/multiplayer/useRoom'
 import { pointsForLevel } from '@/config/multiplayerConfig'
@@ -15,6 +16,7 @@ import { ConnectionBadge } from '@/components/multi/ConnectionBadge'
 import { LifelineResultCard } from '@/components/multi/LifelineResultCard'
 import { MultiLifelines } from '@/components/multi/MultiLifelines'
 import { MultiQuestionTimer } from '@/components/multi/MultiQuestionTimer'
+import { WagerPanel } from '@/components/multi/WagerPanel'
 import { ExitIcon } from '@/components/icons'
 import { useSettingsActions } from '@/state/SettingsContext'
 import { cn } from '@/utils'
@@ -35,8 +37,14 @@ interface Props {
   lifelineResult: LifelineResult | null
   lifelineBusy: LifelineType | null
   lifelineError: string | null
+  wagerPercent: WagerPercent
+  wagerAmount: number
+  wagerBusy: boolean
+  wagerError: string | null
   busy: boolean
   onAnswer: (index: number) => void
+  onWager: (percent: WagerPercent) => void
+  onClearWagerError: () => void
   onLifeline: (type: LifelineType) => void
   onDismissLifelineResult: () => void
   onClearLifelineError: () => void
@@ -65,8 +73,14 @@ export function MultiplayerGame({
   lifelineResult,
   lifelineBusy,
   lifelineError,
+  wagerPercent,
+  wagerAmount,
+  wagerBusy,
+  wagerError,
   busy,
   onAnswer,
+  onWager,
+  onClearWagerError,
   onLifeline,
   onDismissLifelineResult,
   onClearLifelineError,
@@ -141,7 +155,7 @@ export function MultiplayerGame({
             <h1 className="truncate font-display text-sm font-bold tracking-[0.12em] text-white sm:text-lg">
               CÂU {question.index}/{question.total}
               <span className="ml-2 font-normal tracking-normal text-white/45">
-                · {room.players.length} người · {me?.score ?? 0} điểm
+                · {room.players.length} người · {(me?.score ?? 0).toLocaleString('vi-VN')} gói
               </span>
             </h1>
           </div>
@@ -176,10 +190,10 @@ export function MultiplayerGame({
 
             <div className="glass min-w-[9rem] rounded-2xl px-4 py-2.5 text-center sm:px-5 sm:py-3">
               <p className="font-display text-[9px] uppercase tracking-[0.22em] text-white/45">
-                Điểm nếu đúng
+                Gói nếu đúng
               </p>
               <p className="mt-1 font-display text-lg font-bold tabular-nums text-gold-200">
-                {points.toLocaleString('vi-VN')} điểm
+                {points.toLocaleString('vi-VN')} gói
               </p>
               <p
                 className="max-w-[9rem] truncate text-[10px] uppercase tracking-[0.16em] text-white/45"
@@ -189,6 +203,19 @@ export function MultiplayerGame({
               </p>
             </div>
           </motion.div>
+
+          <WagerPanel
+            question={question}
+            serverOffset={serverOffset}
+            score={me?.score ?? 0}
+            percent={wagerPercent}
+            amount={wagerAmount}
+            busy={wagerBusy}
+            disabled={status !== 'connected' || expired || tooLate}
+            error={wagerError}
+            onSelect={onWager}
+            onClearError={onClearWagerError}
+          />
 
           <MultiLifelines
             lifelines={lifelines}

@@ -165,7 +165,7 @@ export function ChickenLossPage(props: Props) {
                 </span>
               </p>
               <p className="mt-1 text-sm font-semibold text-white/75">
-                {props.score.toLocaleString('vi-VN')} điểm
+                {props.score.toLocaleString('vi-VN')} gói
               </p>
             </div>
           ) : (
@@ -186,7 +186,7 @@ export function ChickenLossPage(props: Props) {
           )}
 
           <p className="mt-3 font-display text-xs uppercase tracking-[0.16em] text-white/45">
-            {isFinal ? 'Đang phát hết nhạc lose...' : '0 điểm · xem đáp án và tiếp tục'}
+            {isFinal ? 'Đang phát hết nhạc lose...' : '0 gói · xem đáp án và tiếp tục'}
           </p>
 
           <div

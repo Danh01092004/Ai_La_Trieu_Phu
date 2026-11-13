@@ -9,15 +9,16 @@
 | Phòng | 1 phòng tối đa **40 người chơi + 1 quản trò**, mã **6 ký tự**; người tạo là quản trò, không chơi |
 | Quản trò | Chỉ xem BXH/hạng/trạng thái, bắt đầu, chơi lại, **mời ra** và **chặn/bỏ chặn**; không nhận nội dung câu hỏi |
 | Ván | **15 câu**, mỗi câu **15 giây**, server chốt giờ |
-| Điểm | Câu 1 = 1, mỗi câu nhân đôi; câu 15 = 16.384; tối đa **32.767** |
-| Sai/hết giờ | 0 điểm, không bị loại; **route riêng** `/multiplayer/chicken` hiện nhanh **3 s** rồi về reveal; nhạc lose tiếp tục dưới reveal và hết trước câu tiếp |
-| Reveal | Đáp án đúng + giải thích + phân bố + **BXH top 5** + hạng/điểm của bạn |
+| Gói hàng | Câu 1 = 1, mỗi câu nhân đôi; câu 15 = 16.384; tối đa không mang thêm **32.767**, tối đa lý thuyết **245.760** |
+| Mang thêm | Mỗi câu chọn **10%/25%/100%** số gói hiện có; khóa ở **3 giây cuối**; đúng cộng thêm, sai mất phần mang thêm |
+| Sai/hết giờ | Không nhận thưởng câu; nếu có mang thêm thì trừ phần đó, không bị loại; **route riêng** `/multiplayer/chicken` hiện nhanh **3 s** rồi về reveal; nhạc lose tiếp tục dưới reveal và hết trước câu tiếp |
+| Reveal | Đáp án đúng + giải thích + phân bố + **BXH top 5** + hạng/gói hàng của bạn + tách thưởng câu/mang thêm |
 | Trợ giúp | 4 loại, mỗi loại **1 lần/người/ván**, server cấp dữ liệu và kiểm tra |
 | Kết thúc | Hạng **1–5** ăn mừng + BXH đầy đủ; hạng **>5** page gà full + nhạc lose rồi BXH (không confetti/victory); quản trò thấy BXH chung cuộc |
-| Chơi lại | Quản trò reset điểm + trợ giúp, giữ phòng/người, về lobby |
+| Chơi lại | Quản trò reset gói hàng + trợ giúp, giữ phòng/người, về lobby |
 | Single-player | Đã xoá khỏi route, Home và source; `/game` và `/result` không còn |
 | Lưu trữ | Kết quả ghi bền `data/results.json` (atomic temp+rename), API `/api/leaderboard` |
-| Reconnect | Token resume xoay vòng; F5/mất mạng khôi phục đúng phòng, câu, điểm, trợ giúp trong grace 60 s |
+| Reconnect | Token resume xoay vòng; F5/mất mạng khôi phục đúng phòng, câu, gói hàng, mức mang thêm, trợ giúp trong grace 60 s |
 
 ## 2. Luồng chính
 
@@ -54,10 +55,24 @@ Trạng thái phòng: `lobby → playing → final → lobby (rematch)`.
 pointsForLevel(n) = 2 ** (n - 1)   // n = 1..15
 ```
 
-- Đúng: cộng điểm câu hiện tại, `correct += 1`, cộng `totalMs`.
-- Sai/hết giờ: 0 điểm; `totalMs` không cộng.
+- Đúng không mang thêm: cộng thưởng câu, `correct += 1`, cộng `totalMs`.
+- Sai/hết giờ không mang thêm: 0 điểm; `totalMs` không cộng.
 - Không có streak, không có điểm tốc độ; `totalMs` chỉ là tie-break.
-- Tổng tối đa: `2^15 - 1 = 32.767`.
+- Tổng tối đa không mang thêm: `2^15 - 1 = 32.767`.
+
+### 3.1. Mang thêm gói hàng
+
+Trong mỗi câu, người chơi có thể chọn **10% / 25% / 100%** số gói hiện có để “mang thêm”:
+
+```ts
+wagerAmount = floor(currentScore * percent / 100)
+```
+
+- Chọn được nhiều lần; server khóa ở **3 giây cuối** (`wagerLockAt = endsAt - 3000`).
+- Đúng: `score += reward + wagerAmount`.
+- Sai/hết giờ: không nhận `reward`, đồng thời `score -= wagerAmount` (không xuống dưới 0).
+- `10%`/`25%` có thể làm tròn xuống 0 khi số gói còn ít; UI khóa mức đó và server trả `WAGER_NOT_AVAILABLE`.
+- Tổng tối đa nếu đúng hết và luôn mang 100%: `15 × 2^14 = 245.760`.
 
 Thứ tự BXH (server sort, client không tự sort):
 
@@ -85,14 +100,15 @@ Thứ tự BXH (server sort, client không tự sort):
 | `admin:block` | `{ playerId }` | `{ ok }` hoặc `RoomError` |
 | `admin:unblock` | `{ blockId }` | `{ ok }` hoặc `RoomError` |
 | `answer:submit` | `{ questionIndex, answerIndex }` | `{ ok, accepted, questionIndex, receivedAt }` hoặc `GameError` |
+| `wager:submit` | `{ questionIndex, percent }` | `{ ok, percent, amount, wagerLockAt }` hoặc `GameError` |
 | `lifeline:use` | `{ type, questionIndex }` | `{ ok, type, result }` hoặc `GameError` |
 
 `room:resume` ack trả `snapshot` dạng:
 
 ```ts
 { phase: 'lobby' }
-| { phase: 'question', question, answered, selectedAnswer, lifelines, removedAnswers }
-| { phase: 'reveal', question, reveal, answered, lifelines, removedAnswers }
+| { phase: 'question', question, answered, selectedAnswer, wager, lifelines, removedAnswers }
+| { phase: 'reveal', question, reveal, answered, wager, lifelines, removedAnswers }
 | { phase: 'final', final }
 | { phase: 'admin', admin }   // chỉ quản trò
 ```
@@ -105,8 +121,8 @@ Thứ tự BXH (server sort, client không tự sort):
 | `admin:state` | BXH trực tiếp + trạng thái từng người + danh sách chặn; chỉ phát cho quản trò |
 | `room:kicked` | `{ reason:'kick'\|'block', message }` — gửi riêng người bị mời ra/chặn |
 | `room:closed` | `{ reason:'admin_left'\|'admin_timeout', message }` — phòng đóng khi quản trò rời |
-| `game:question` | `{ index, total, question, endsAt, durationMs, serverNow }` — không gửi cho quản trò |
-| `game:reveal` | `{ index, total, correctIndex, explanation, distribution, yourAnswer, yourCorrect, yourDelta, yourScore, yourCorrectCount, yourRank, totalPlayers, leaderboard[5], revealDurationMs, revealEndsAt, loseDurationMs, serverNow }` |
+| `game:question` | `{ index, total, question, endsAt, durationMs, wagerLockAt, serverNow }` — không gửi cho quản trò |
+| `game:reveal` | `{ index, total, correctIndex, explanation, distribution, yourAnswer, yourCorrect, yourBaseReward, yourBaseDelta, yourWagerPercent, yourWagerAmount, yourWagerDelta, yourDelta, yourScore, yourCorrectCount, yourRank, totalPlayers, leaderboard[5], revealDurationMs, revealEndsAt, loseDurationMs, serverNow }` |
 | `game:end` | `{ total, leaderboard[], you: { rank, score, correct }, loseDurationMs, serverNow }` |
 | `room:error` | `RoomError` |
 
@@ -115,9 +131,9 @@ Thứ tự BXH (server sort, client không tự sort):
 ### Mã lỗi
 
 - Phòng: `INVALID_NAME`, `INVALID_CODE`, `ROOM_NOT_FOUND`, `ROOM_FULL`, `ALREADY_IN_ROOM`, `NOT_IN_ROOM`, `ROOM_STARTED`, `ROOM_IN_PROGRESS`, `ROOM_NOT_FINISHED`, `NOT_ADMIN`, `CANNOT_TARGET_ADMIN`, `PLAYER_NOT_FOUND`, `PLAYER_BLOCKED`, `BLOCK_NOT_FOUND`, `NOT_ENOUGH_PLAYERS`, `INVALID_RESUME_TOKEN`.
-- Câu hỏi: `NOT_IN_ROOM`, `NOT_A_PLAYER`, `ROOM_NOT_PLAYING`, `NO_ACTIVE_QUESTION`, `WRONG_QUESTION`, `ALREADY_ANSWERED`, `ANSWER_TOO_LATE`, `INVALID_ANSWER`, `ANSWER_REMOVED`, `INVALID_LIFELINE`, `LIFELINE_ALREADY_USED`, `LIFELINE_NOT_ALLOWED`.
+- Câu hỏi: `NOT_IN_ROOM`, `NOT_A_PLAYER`, `ROOM_NOT_PLAYING`, `NO_ACTIVE_QUESTION`, `WRONG_QUESTION`, `ALREADY_ANSWERED`, `ANSWER_TOO_LATE`, `INVALID_ANSWER`, `ANSWER_REMOVED`, `INVALID_WAGER`, `WAGER_LOCKED`, `WAGER_NOT_AVAILABLE`, `INVALID_LIFELINE`, `LIFELINE_ALREADY_USED`, `LIFELINE_NOT_ALLOWED`.
 
-`questionIndex` là 1..20. `lifeline:use` cũng bắt buộc gửi đúng câu hiện tại để request trễ không tiêu hao trợ giúp ở câu sau.
+`questionIndex` là 1..15. `lifeline:use` cũng bắt buộc gửi đúng câu hiện tại để request trễ không tiêu hao trợ giúp ở câu sau.
 
 ## 5. Trợ giúp (server-authoritative)
 

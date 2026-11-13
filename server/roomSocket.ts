@@ -13,6 +13,7 @@ import type {
   RoomRematchAck,
   RoomResumeAck,
   RoomStartAck,
+  WagerAck,
 } from '../src/types/multiplayer'
 import { DISCONNECT_GRACE_MS } from './config.js'
 import { GameManager } from './game.js'
@@ -300,6 +301,15 @@ export function registerRoomHandlers(io: Server, results: ResultsStore): void {
       'answer:submit',
       (payload: unknown, ack?: (result: AnswerAck) => void) => {
         const result = games.answer(playerIdFor(socket.id), payload)
+        if (typeof ack === 'function') ack(result)
+      },
+    )
+
+    /** Wager changes are accepted until the server-side lock window. */
+    socket.on(
+      'wager:submit',
+      (payload: unknown, ack?: (result: WagerAck) => void) => {
+        const result = games.wager(playerIdFor(socket.id), payload)
         if (typeof ack === 'function') ack(result)
       },
     )

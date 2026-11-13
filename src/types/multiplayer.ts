@@ -171,6 +171,7 @@ export type GameSnapshot =
       question: GameQuestionPayload
       answered: boolean
       selectedAnswer: number | null
+      wager: WagerState
       lifelines: LifelineState
       removedAnswers: number[]
     }
@@ -179,6 +180,7 @@ export type GameSnapshot =
       question: GameQuestionPayload
       reveal: GameRevealPayload
       answered: boolean
+      wager: WagerState
       lifelines: LifelineState
       removedAnswers: number[]
     }
@@ -253,6 +255,17 @@ export interface GameQuestion {
   difficulty: Difficulty
 }
 
+/** The wager percentages offered to players. 0 means no extra packages. */
+export type WagerPercent = 0 | 10 | 25 | 100
+
+/** A player's current-question wager. */
+export interface WagerState {
+  percent: WagerPercent
+  /** Packages at risk, computed from the score when the wager was placed. */
+  amount: number
+  wagerLockAt: number
+}
+
 /** Broadcast when the server opens a question. */
 export interface GameQuestionPayload {
   /** 1-based question number (1..total). */
@@ -262,6 +275,8 @@ export interface GameQuestionPayload {
   /** Server epoch ms; clients derive their local deadline from `serverNow`. */
   endsAt: number
   durationMs: number
+  /** Server epoch ms after which wagers are locked. */
+  wagerLockAt: number
   /** Server clock at emission, used to correct client clock skew. */
   serverNow: number
 }
@@ -283,6 +298,9 @@ export type GameErrorCode =
   | 'ANSWER_TOO_LATE'
   | 'INVALID_ANSWER'
   | 'ANSWER_REMOVED'
+  | 'INVALID_WAGER'
+  | 'WAGER_LOCKED'
+  | 'WAGER_NOT_AVAILABLE'
   | 'INVALID_LIFELINE'
   | 'LIFELINE_ALREADY_USED'
   | 'LIFELINE_NOT_ALLOWED'
@@ -301,6 +319,24 @@ export interface AnswerAccepted {
 }
 
 export type AnswerAck = AnswerAccepted | GameError
+
+// ── Wagers ───────────────────────────────────────────────────────────────────
+
+export interface WagerSubmitPayload {
+  /** Must match the currently open 1-based question index. */
+  questionIndex: number
+  percent: WagerPercent
+}
+
+export interface WagerAccepted {
+  ok: true
+  percent: WagerPercent
+  /** Packages at risk, rounded down from the player's current score. */
+  amount: number
+  wagerLockAt: number
+}
+
+export type WagerAck = WagerAccepted | GameError
 
 // ── Lifelines ────────────────────────────────────────────────────────────────
 
@@ -381,7 +417,16 @@ export interface GameRevealPayload {
   distribution: AnswerDistribution
   yourAnswer: number | null
   yourCorrect: boolean
-  /** Points earned this question (0 for a wrong answer or timeout). */
+  /** Base reward for this question before any wager. */
+  yourBaseReward: number
+  /** Base reward actually added (0 for a wrong answer or timeout). */
+  yourBaseDelta: number
+  yourWagerPercent: WagerPercent
+  /** Packages carried into this question. */
+  yourWagerAmount: number
+  /** Wager outcome: positive when correct, negative when wrong, 0 without a wager. */
+  yourWagerDelta: number
+  /** Actual score change after any score floor is applied. */
   yourDelta: number
   yourScore: number
   yourCorrectCount: number
@@ -468,6 +513,10 @@ export interface ClientToServerEvents {
   'answer:submit': (
     payload: AnswerSubmitPayload,
     ack: (result: AnswerAck) => void,
+  ) => void
+  'wager:submit': (
+    payload: WagerSubmitPayload,
+    ack: (result: WagerAck) => void,
   ) => void
   'lifeline:use': (
     payload: LifelineUsePayload,
