@@ -38,6 +38,10 @@ Sau khi dùng, cả 4 nút đều có dấu `✕` và không dùng lại đượ
 - [Trang gà + BXH cuối trên màn người chơi hạng 6 (local)](./screenshots/15q-final-loser.png)
 - [BXH cuối trên Vercel — quản trò](./screenshots/vercel-final-admin.png)
 - [BXH cuối trên Vercel — người chơi hạng 6](./screenshots/vercel-final-player6.png)
+- [BXH cuối trên production Vercel — quản trò (test nhanh)](./screenshots/prod-fast-final-admin.png)
+- [BXH cuối trên production Vercel — người chơi (test nhanh)](./screenshots/prod-fast-final-player6.png)
+- [BXH cuối trên production Vercel — quản trò (timing bình thường)](./screenshots/prod-normal-final-admin.png)
+- [BXH cuối trên production Vercel — người chơi (timing bình thường)](./screenshots/prod-normal-final-player6.png)
 
 ## Test thêm trên Vercel (WebSocket thật)
 
@@ -47,6 +51,17 @@ Sau khi dùng, cả 4 nút đều có dấu `✕` và không dùng lại đượ
 - **Kết quả:** Player 1 hạng 1 `2.307` điểm (4/15), Player 2–6 `2.305` điểm; Player 1 đã dùng cả 4 trợ giúp.
 - **Lưu ý:** lần test này trình duyệt tự động chọn đáp án A để chạy nhanh qua 15 câu, nên điểm thấp; mục tiêu là kiểm tra transport WebSocket, lobby 6 người, trợ giúp và final trên Vercel, không phải kiểm tra điểm tối đa.
 - Adapter Vercel rút reveal còn **2,5 giây** khi `VERCEL=1`; test chạy hết 15 câu trên temporary deployment. Project Vercel hiện từ chối `maxDuration` >60 giây, nên `vercel.json` không đặt giới hạn này và độ bền ván dài vẫn phụ thuộc plan/instance.
+
+## Production Vercel
+
+- **URL:** `https://ai-la-trieu-phu-messi-bucu.vercel.app`
+- **Build:** thành công sau khi sửa `.vercelignore` (mẫu `data/` trước đây loại luôn `src/data/questions.json`, làm `tsc` fail); commit `e81631e`.
+- **Deployment protection:** đã tắt SSO để URL public; `/api/socket-io/ping` trả `200` và `altp-vercel`.
+- **Test nhanh 6 người + 1 quản trò:** phòng `F4PT5C`, chạy đủ **15/15 câu**, hiện `VÁN ĐẤU HOÀN TẤT` + `CHUNG CUỘC`; cả 6 người `16.384` điểm, 1/15 câu đúng; Player 1 vô địch. Đây là test transport/final với `QUESTION_MS=300`, `REVEAL_MS=300`, `LOSE_MS=300` tạm thời, **đã xóa env và deploy lại**; không phải điểm tối đa.
+- **Test bình thường 6 người + 1 quản trò:** phòng `QPW7BX`, chạy đủ **15/15 câu** với timing 15 giây/câu + reveal 2,5 giây; final `VÁN ĐẤU HOÀN TẤT`, vô địch **Normal P1 · 16.448 điểm** (2/15). Một tab người chơi (Normal P4) mất kết nối do trình duyệt automation chạy nền, vẫn được xếp hạng 6 với 64 điểm; 5 tab còn lại hoàn tất.
+- **Timing production bình thường:** đo được reveal câu 1 sau **15,5 giây** sau khi xóa env nhanh, đúng cấu hình 15 giây/câu.
+- **Trợ giúp:** Player 1 đã dùng `50:50` trong test production bình thường; cả 4 trợ giúp đã được kiểm tra đầy đủ ở test local `ZS4WGT` và temporary `B5WCB4`.
+- **Giới hạn Vercel:** phòng/matches lưu trong RAM của một function instance. 6 tab cùng một trình duyệt đã chạy được, nhưng client ở instance khác có thể không thấy phòng; đây là lý do production phù hợp demo/test, chưa phù hợp lưu lượng thật nếu không có Redis/pub-sub hoặc server realtime riêng.
 
 ## Ghi chú
 

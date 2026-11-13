@@ -63,10 +63,12 @@ Repo có sẵn adapter WebSocket cho Vercel tại `api/socket-io/[...path].ts`. 
 - Client tự nhận host `.vercel.app`/`.tmp.now`, dùng `path: '/api/socket-io/socket.io'`, `addTrailingSlash: false`, `transports: ['websocket']`.
 - Function và các module server dùng import ESM có đuôi `.js`; `questions.json` được import kèm `with { type: 'json' }` để Node 26 không lỗi `ERR_MODULE_NOT_FOUND`.
 - `package.json` khai báo `engines.node: "26.x"` (Vercel đã bỏ Node 20/22). `vercel.json` chỉ khai báo framework/build/output; **không** đặt `maxDuration` vì project Vercel hiện từ chối giá trị >60 giây.
+- **Bắt buộc:** `.vercelignore` phải dùng `/data/` (chỉ thư mục runtime ở root), không dùng `data/`, vì mẫu cũ loại luôn `src/data/questions.json` và làm build Vercel fail `TS2307`.
 - Khi `VERCEL=1`, server rút reveal xuống **2,5 giây** để ván 15 câu ngắn hơn và có thêm thời gian cho lobby/page gà; local/production Express vẫn giữ 6 giây. Giới hạn thời lượng function tùy plan/instance, không được bảo đảm cho ván dài.
 - Deploy: `vercel --prod` (hoặc kết nối repo trên Vercel). Kiểm tra adapter cục bộ bằng `npm run test:vercel`.
+- **Production:** https://ai-la-trieu-phu-messi-bucu.vercel.app — đã build thành công, `/api/socket-io/ping` trả `altp-vercel`, và test 6 tab + 1 quản trò chạy hết 15 câu (xem `docs/MULTIPLAYER-TEST-15Q.md`).
 
-**Giới hạn quan trọng:** phòng đấu nằm trong RAM của một function instance. Vercel không bảo đảm mọi WebSocket của các tab vào cùng một instance, và instance có thể bị thu hồi/restart; khi đó lobby/BXH có thể lệch hoặc mất phòng. Vercel cũng không giữ file `data/results.json` giữa các instance (adapter production dùng `/tmp/altp-results.json`). Vì vậy adapter phù hợp demo/nhóm nhỏ, chưa thay thế server Socket.IO thường trực cho 40 người. Muốn chạy ổn định nhiều instance cần Redis/pub-sub + lưu kết quả bền.
+**Giới hạn quan trọng:** phòng đấu nằm trong RAM của một function instance. Vercel không bảo đảm mọi WebSocket của các tab vào cùng một instance, và instance có thể bị thu hồi/restart; khi đó lobby/BXH có thể lệch hoặc mất phòng. Trong test production, 6 tab cùng một trình duyệt vào được cùng phòng, nhưng 7 socket client độc lập có lần bị chia instance và báo “Không tìm thấy phòng”. Vercel cũng không giữ file `data/results.json` giữa các instance (adapter production dùng `/tmp/altp-results.json`). Vì vậy adapter phù hợp demo/nhóm nhỏ, chưa thay thế server Socket.IO thường trực cho 40 người. Muốn chạy ổn định nhiều instance cần Redis/pub-sub + lưu kết quả bền.
 
 ## Test
 
