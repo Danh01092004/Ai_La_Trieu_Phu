@@ -1,7 +1,7 @@
 import { randomInt } from 'node:crypto'
 import type { Server } from 'socket.io'
-import rawQuestions from '../src/data/questions.json'
-import { pointsForLevel } from '../src/config/multiplayerConfig'
+import rawQuestions from '../src/data/questions.json' with { type: 'json' }
+import { pointsForLevel } from '../src/config/multiplayerConfig.js'
 import type { LifelineType, Question } from '../src/types'
 import type {
   AdminPlayerStatus,
@@ -25,16 +25,16 @@ import {
   QUESTION_COUNT,
   QUESTION_DURATION_MS,
   QUESTION_REVEAL_MS,
-} from './config'
-import { ResultsStore } from './results'
+} from './config.js'
+import { ResultsStore } from './results.js'
 import {
   generateAudience,
   generateFifty,
   generateMc,
   generatePhone,
-} from './lifelines'
-import { buildLeaderboard } from './ranking'
-import { playingPlayers, type Room, type RoomManager } from './rooms'
+} from './lifelines.js'
+import { buildLeaderboard } from './ranking.js'
+import { playingPlayers, type Room, type RoomManager } from './rooms.js'
 
 const questionBank = rawQuestions as Question[]
 const QUESTION_DIFFICULTIES = new Set<Question['difficulty']>([

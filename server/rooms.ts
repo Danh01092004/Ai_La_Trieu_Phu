@@ -4,7 +4,7 @@ import {
   MIN_PLAYERS_TO_START,
   ROOM_CODE_ALPHABET,
   ROOM_CODE_LENGTH,
-} from '../src/config/multiplayerConfig'
+} from '../src/config/multiplayerConfig.js'
 import type { LifelineState } from '../src/types'
 import type {
   AdminPhase,
@@ -19,7 +19,7 @@ import type {
   RoomState,
   RoomStatus,
 } from '../src/types/multiplayer'
-import { buildLeaderboard } from './ranking'
+import { buildLeaderboard } from './ranking.js'
 
 const NAME_MIN_LENGTH = 2
 const NAME_MAX_LENGTH = 16

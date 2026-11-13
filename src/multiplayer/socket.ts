@@ -19,9 +19,26 @@ let socket: MultiplayerSocket | null = null
  */
 export function getMultiplayerSocket(): MultiplayerSocket {
   if (!socket) {
+    // On Vercel, Socket.IO is served by the `api/socket-io/[...path]`
+    // function. Vercel routes the function without a trailing slash and only
+    // supports WebSocket upgrades, so the Vercel host must skip Socket.IO's
+    // HTTP long-polling transport and its default trailing slash.
+    const isVercelHost =
+      typeof window !== 'undefined' &&
+      (window.location.hostname.endsWith('.vercel.app') ||
+        window.location.hostname.endsWith('.tmp.now'))
+
     socket = io({
       autoConnect: false,
-      transports: ['websocket', 'polling'],
+      ...(isVercelHost
+        ? {
+            path: '/api/socket-io/socket.io',
+            addTrailingSlash: false,
+          }
+        : {}),
+      transports: isVercelHost
+        ? ['websocket']
+        : ['websocket', 'polling'],
       // Once a websocket upgrade succeeds, reconnect straight to websocket
       // instead of repeating the polling handshake.
       rememberUpgrade: true,

@@ -3,7 +3,7 @@ import {
   LOSE_PAGE_MS,
   QUESTION_TIME_MS,
   TOTAL_QUESTIONS,
-} from '../src/config/multiplayerConfig'
+} from '../src/config/multiplayerConfig.js'
 
 const DEFAULT_PORT = 3001
 const MAX_PORT = 65_535

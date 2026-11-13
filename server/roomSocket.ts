@@ -14,16 +14,16 @@ import type {
   RoomResumeAck,
   RoomStartAck,
 } from '../src/types/multiplayer'
-import { DISCONNECT_GRACE_MS } from './config'
-import { GameManager } from './game'
+import { DISCONNECT_GRACE_MS } from './config.js'
+import { GameManager } from './game.js'
 import {
   RoomManager,
   playerCount,
   playingPlayers,
   type Room,
   type RoomPlayer,
-} from './rooms'
-import type { ResultsStore } from './results'
+} from './rooms.js'
+import type { ResultsStore } from './results.js'
 
 function roomChannel(code: string): string {
   return `room:${code}`
