@@ -15,6 +15,7 @@
     "test:prod": "tsx server/scripts/productionSmoke.ts",
     "test:questions": "tsx server/scripts/questionsSmoke.ts",
     "test:scoring": "tsx server/scripts/scoringSmoke.ts",
+    "test:snapshot": "tsx server/scripts/snapshotOrderSmoke.ts",
     "test:lifelines": "tsx server/scripts/lifelinesSmoke.ts",
     "test:rooms": "tsx server/scripts/roomSmoke.ts",
     "test:admin": "tsx server/scripts/adminSmoke.ts",

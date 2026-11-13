@@ -27,6 +27,7 @@ import type {
 import { wagerForScore } from '@/config/multiplayerConfig'
 import { getMultiplayerSocket, type MultiplayerSocket } from './socket'
 import { gameErrorMessage, roomErrorMessage } from './messages'
+import { isStaleSnapshot } from './snapshotOrder'
 import { ROOM_SESSION_KEY } from './session'
 
 export type RoomConnectionStatus = 'connecting' | 'connected' | 'disconnected'
@@ -301,6 +302,7 @@ export function useRoom() {
   const resumeInFlightRef = useRef(false)
   const resumeRetryRef = useRef<number | null>(null)
   const hiddenAtRef = useRef<number | null>(null)
+  const attemptResumeRef = useRef<(() => void) | null>(null)
   const revealRef = useRef<GameRevealPayload | null>(null)
   const serverOffsetRef = useRef(0)
   const questionRef = useRef<GameQuestionPayload | null>(null)
@@ -405,6 +407,16 @@ export function useRoom() {
   /** Restore the exact screen from a `room:resume` ack. */
   const applySnapshot = useCallback(
     (snapshot: GameSnapshot) => {
+      if (
+        isStaleSnapshot(snapshot, {
+          questionIndex: questionRef.current?.index ?? null,
+          revealIndex: revealRef.current?.index ?? null,
+          roomStatus: roomRef.current?.status ?? null,
+        })
+      ) {
+        return
+      }
+
       if (snapshot.phase === 'admin') {
         resetMatchState()
         setFinal(null)
@@ -507,8 +519,29 @@ export function useRoom() {
           playerId: result.playerId,
           name: session.name,
         }
+        // Persist the rotated token even when the snapshot lost the race: the
+        // old token must not be reused, but the stale room/game snapshot must
+        // not overwrite a newer live event.
         sessionRef.current = nextSession
         writeSession(nextSession)
+        if (
+          isStaleSnapshot(result.snapshot, {
+            questionIndex: questionRef.current?.index ?? null,
+            revealIndex: revealRef.current?.index ?? null,
+            roomStatus: roomRef.current?.status ?? null,
+          })
+        ) {
+          // Keep the room/seat visible if this tab had no local room yet; the
+          // live question event already restored the newer game state.
+          commitPlayer(result.playerId)
+          if (!roomRef.current) {
+            commitRoom(result.room)
+            setAdminState(result.adminState ?? null)
+          }
+          setError(null)
+          clearResumeRetry()
+          return
+        }
         commitPlayer(result.playerId)
         commitRoom(result.room)
         setAdminState(result.adminState ?? null)
@@ -537,6 +570,10 @@ export function useRoom() {
         resumeInFlightRef.current = false
         if (mountedRef.current) setResuming(false)
       }
+    }
+
+    attemptResumeRef.current = () => {
+      if (socket.connected && sessionRef.current) void attemptResume()
     }
 
     const onConnect = () => {
@@ -674,6 +711,9 @@ export function useRoom() {
 
     const onGameQuestion = (next: GameQuestionPayload) => {
       if (!mountedRef.current) return
+      // Never let a buffered/late packet move the match backwards after a
+      // resume has already restored a newer question.
+      if (questionRef.current && next.index < questionRef.current.index) return
       setFinal(null)
       commitQuestion(next)
       // One-way latency means this offset is a few ms pessimistic. It is
@@ -684,6 +724,15 @@ export function useRoom() {
 
     const onGameReveal = (next: GameRevealPayload) => {
       if (!mountedRef.current) return
+      const currentQuestion = questionRef.current
+      // A dropped question packet must not pair this reveal with the previous
+      // question's text. Ignore a late reveal, otherwise fetch the authoritative
+      // question + reveal pair from the server.
+      if (currentQuestion && next.index < currentQuestion.index) return
+      if (!currentQuestion || next.index > currentQuestion.index) {
+        void attemptResume()
+        return
+      }
       // The question is locked for good once the reveal is authoritative.
       answeredRef.current = true
       submittingRef.current = false
@@ -735,6 +784,7 @@ export function useRoom() {
 
     return () => {
       mountedRef.current = false
+      attemptResumeRef.current = null
       clearResumeRetry()
       socket.off('connect', onConnect)
       socket.off('disconnect', onDisconnect)
@@ -774,6 +824,42 @@ export function useRoom() {
     resetMatchState,
     socket,
   ])
+
+  const roomStatus = room?.status ?? null
+  const revealTrackKey = reveal ? `${reveal.index}:${reveal.revealEndsAt}` : null
+  const questionEndsAt = question?.endsAt ?? null
+
+  // Last-resort resync: if a tab froze while a question/reveal opened, it can
+  // sit on the previous screen forever. Once the local deadline is clearly
+  // overdue, ask for the authoritative snapshot instead of waiting for the
+  // next question (or for the user to switch tabs again).
+  useEffect(() => {
+    if (roomStatus !== 'playing' || !revealTrackKey) return
+
+    const timer = window.setInterval(() => {
+      const current = revealRef.current
+      if (!current) return
+      if (Date.now() + serverOffsetRef.current > current.revealEndsAt + 1_500) {
+        attemptResumeRef.current?.()
+      }
+    }, 2_000)
+
+    return () => window.clearInterval(timer)
+  }, [roomStatus, revealTrackKey])
+
+  useEffect(() => {
+    if (roomStatus !== 'playing' || questionEndsAt === null) return
+
+    const timer = window.setInterval(() => {
+      const current = questionRef.current
+      if (!current || revealRef.current) return
+      if (Date.now() + serverOffsetRef.current > questionEndsAt + 1_500) {
+        attemptResumeRef.current?.()
+      }
+    }, 2_000)
+
+    return () => window.clearInterval(timer)
+  }, [questionEndsAt, roomStatus])
 
   const createRoom = useCallback(
     async (name: string): Promise<boolean> => {
