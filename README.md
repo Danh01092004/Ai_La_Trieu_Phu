@@ -56,6 +56,18 @@ Biến môi trường production:
 
 Điện thoại cùng Wi-Fi mở `http://<IP-máy-chạy-server>:3001` và mở firewall cho cổng 3001. Nếu đặt sau reverse proxy, phải bật upgrade WebSocket cho `/socket.io/`.
 
+## Deploy Vercel
+
+Repo có sẵn adapter WebSocket cho Vercel tại `api/socket-io/[...path].ts`. Adapter dùng đúng `server/roomSocket.ts` và `server/game.ts`, nên luật chơi/trợ giúp/BXH giống bản Express.
+
+- Client tự nhận host `.vercel.app`/`.tmp.now`, dùng `path: '/api/socket-io/socket.io'`, `addTrailingSlash: false`, `transports: ['websocket']`.
+- Function và các module server dùng import ESM có đuôi `.js`; `questions.json` được import kèm `with { type: 'json' }` để Node 26 không lỗi `ERR_MODULE_NOT_FOUND`.
+- `package.json` khai báo `engines.node: "26.x"` (Vercel đã bỏ Node 20/22). `vercel.json` đặt `maxDuration: 300` cho function.
+- Vercel Hobby giới hạn function 300 giây. Khi `VERCEL=1`, server rút reveal xuống **2,5 giây** để 15 câu + lobby + page gà final vừa 300 giây; local/production Express vẫn giữ 6 giây.
+- Deploy: `vercel --prod` (hoặc kết nối repo trên Vercel). Kiểm tra adapter cục bộ bằng `npm run test:vercel`.
+
+**Giới hạn quan trọng:** phòng đấu nằm trong RAM của một function instance. Vercel không bảo đảm mọi WebSocket của các tab vào cùng một instance, và instance có thể bị thu hồi/restart; khi đó lobby/BXH có thể lệch hoặc mất phòng. Vercel cũng không giữ file `data/results.json` giữa các instance (adapter production dùng `/tmp/altp-results.json`). Vì vậy adapter phù hợp demo/nhóm nhỏ, chưa thay thế server Socket.IO thường trực cho 40 người. Muốn chạy ổn định nhiều instance cần Redis/pub-sub + lưu kết quả bền.
+
 ## Test
 
 ```powershell
@@ -66,6 +78,7 @@ npm run test:rooms    # phòng, 40 người chơi + quản trò, cap 40, mã
 npm run test:scoring  # 15 nấc điểm + mọi tie-break xếp hạng (không cần server)
 npm run test:lifelines # 50:50, gọi điện luôn sai, khán giả, MC
 npm run test:server   # health + handshake + scoring
+npm run test:vercel   # adapter WebSocket Vercel: handshake, tạo/vào phòng, state chung
 npm run test:prod     # production: static/hashed assets, SPA, 404, API, audio, socket + room flow
 npm run test:results  # ghi JSON, best-per-name, đọc lại file
 npm run test:game     # 15 câu, cần server fast mode bên dưới

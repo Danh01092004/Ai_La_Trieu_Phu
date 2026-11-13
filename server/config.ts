@@ -5,6 +5,15 @@ import {
   TOTAL_QUESTIONS,
 } from '../src/config/multiplayerConfig.js'
 
+/**
+ * Vercel Hobby caps a WebSocket function at 300 seconds. A 15-question match
+ * with the normal 6s reveal would take 315s before the final board, so the
+ * serverless deployment uses a shorter reveal to leave room for the lobby and
+ * the chicken page. Standalone/local runs keep the product's 6s.
+ */
+const IS_VERCEL = process.env.VERCEL === '1'
+const DEFAULT_REVEAL_MS = IS_VERCEL ? 2_500 : 6_000
+
 const DEFAULT_PORT = 3001
 const MAX_PORT = 65_535
 const MIN_QUESTION_MS = 250
@@ -61,7 +70,7 @@ export const QUESTION_REVEAL_MS = readBoundedInt(
   process.env.REVEAL_MS,
   250,
   15_000,
-  6_000,
+  DEFAULT_REVEAL_MS,
 )
 
 /**

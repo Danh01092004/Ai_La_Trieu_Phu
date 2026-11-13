@@ -34,8 +34,19 @@ Sau khi dùng, cả 4 nút đều có dấu `✕` và không dùng lại đượ
 
 ## Ảnh bằng chứng
 
-- [Bảng xếp hạng cuối trên màn quản trò](./screenshots/15q-final-admin.png)
-- [Trang gà + BXH cuối trên màn người chơi hạng 6](./screenshots/15q-final-loser.png)
+- [Bảng xếp hạng cuối trên màn quản trò (local)](./screenshots/15q-final-admin.png)
+- [Trang gà + BXH cuối trên màn người chơi hạng 6 (local)](./screenshots/15q-final-loser.png)
+- [BXH cuối trên Vercel — quản trò](./screenshots/vercel-final-admin.png)
+- [BXH cuối trên Vercel — người chơi hạng 6](./screenshots/vercel-final-player6.png)
+
+## Test thêm trên Vercel (WebSocket thật)
+
+- **Ngày:** 13/11/2026
+- **Môi trường:** temporary deployment `https://fast-maple-n55n8ow.tmp.now`, function `api/socket-io/[...path].ts`, 6 tab người chơi + 1 tab quản trò.
+- **Phòng:** `B5WCB4`; đủ 6/6 người, chạy hết 15 câu và hiện bảng chung cuộc.
+- **Kết quả:** Player 1 hạng 1 `2.307` điểm (4/15), Player 2–6 `2.305` điểm; Player 1 đã dùng cả 4 trợ giúp.
+- **Lưu ý:** lần test này trình duyệt tự động chọn đáp án A để chạy nhanh qua 15 câu, nên điểm thấp; mục tiêu là kiểm tra transport WebSocket, lobby 6 người, trợ giúp và final trên Vercel, không phải kiểm tra điểm tối đa.
+- Adapter Vercel rút reveal còn **2,5 giây** khi `VERCEL=1` để ván 15 câu vừa giới hạn 300 giây của Hobby.
 
 ## Ghi chú
 
